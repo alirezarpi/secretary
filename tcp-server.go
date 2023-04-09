@@ -1,70 +1,68 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"math/rand"
-	"net"
-	"strconv"
-	"strings"
-	"time"
+    "crypto/rand"
+    "crypto/tls"
+    "log"
+    "net"
+    "crypto/x509"
 )
 
-const MIN = 1
-const MAX = 100
-
-var	serverAddr string
-var serverPort string
-
-func init() {
-	serverAddr = "0.0.0.0"
-	serverPort = ":2244"
-}
-
-func random() int {
-	return rand.Intn(MAX-MIN) + MIN
-}
-
-func handleConnection(c net.Conn) {
-	fmt.Printf("Serving %s\n", c.RemoteAddr().String())
-	for {
-		netData, err := bufio.NewReader(c).ReadString('\n')
-		fmt.Printf("Data: %s\n", netData)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		temp := strings.TrimSpace(string(netData))
-		if temp == "STOP" {
-			fmt.Fprint(c, "you said %s so, bye\n", temp)
-			break
-		}
-
-		result := strconv.Itoa(random()) + "\n"
-		c.Write([]byte(string(result)))
-	}
-	c.Close()
-}
-
-
-// NOTE: Read this later https://gist.github.com/spikebike/2232102 (For TLS Conn)
 func main() {
-	l, err := net.Listen("tcp4", serverPort)
-	fmt.Printf("Secretary listening to %s:%s\n", serverAddr, serverPort)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer l.Close()
-	rand.Seed(time.Now().Unix())
+    cert, err := tls.LoadX509KeyPair("certs/server.pem", "certs/server.key")
+    if err != nil {
+        log.Fatalf("server: loadkeys: %s", err)
+    }
+    config := tls.Config{Certificates: []tls.Certificate{cert}}
+    config.Rand = rand.Reader
+    service := "0.0.0.0:8000"
+    listener, err := tls.Listen("tcp", service, &config)
+    if err != nil {
+        log.Fatalf("server: listen: %s", err)
+    }
+    log.Print("server: listening")
+    for {
+        conn, err := listener.Accept()
+        if err != nil {
+            log.Printf("server: accept: %s", err)
+            break
+        }
+        defer conn.Close()
+        log.Printf("server: accepted from %s", conn.RemoteAddr())
+        tlscon, ok := conn.(*tls.Conn)
+        if ok {
+            log.Print("ok=true")
+            state := tlscon.ConnectionState()
+            for _, v := range state.PeerCertificates {
+                log.Print(x509.MarshalPKIXPublicKey(v.PublicKey))
+            }
+        }
+        go handleClient(conn)
+    }
+}
 
-	for {
-		c, err := l.Accept()
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		go handleConnection(c)
-	}
+func handleClient(conn net.Conn) {
+    defer conn.Close()
+    buf := make([]byte, 512)
+    for {
+        log.Print("server: conn: waiting")
+        n, err := conn.Read(buf)
+        if err != nil {
+            if err != nil {
+                log.Printf("server: conn: read: %s", err)
+            }
+            break
+        }
+        log.Printf("server: conn: echo %q\n", string(buf[:n]))
+        n, err = conn.Write(buf[:n])
+
+        n, err = conn.Write(buf[:n])
+        log.Printf("server: conn: wrote %d bytes", n)
+
+        if err != nil {
+            log.Printf("server: write: %s", err)
+            break
+        }
+    }
+    log.Println("server: conn: closed")
 }
