@@ -1,36 +1,42 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
-    "encoding/json"
-    "github.com/gorilla/mux"
-    "github.com/google/uuid"
+	"encoding/json"
+	"log"
+	"net/http"
+
+	"github.com/google/uuid"
 )
 
 type jsonResponse struct {
-    id       string `json:"id"`
-    status   string `json:"status"`
-    data     string `json:"data"`
+	UUID   string       `json:"uuid"`
+	Status string       `json:"status"`
+	Data   []string     `json:"data"`
 }
 
-func init() {
-    PORT := 8000
-}
+func homePage(w http.ResponseWriter, r *http.Request) {
+    status := "OK"
+	response := jsonResponse{
+		UUID:   uuid.New().String(),
+		Status: status,
+        Data: []string{{"fdsf":"fsdf"}},
+    }
 
-func handleRequests() {
-    myRouter := mux.NewRouter().StrictSlash(true)
-    myRouter.HandleFunc("/", homePage)
-    myRouter.HandleFunc("/all", returnAllresponses)
-    log.Fatal(http.ListenAndServe(":" + HTTP_PORT, myRouter))
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
 func main() {
-    fmt.Println("Rest API v2.0 - Mux Routers")
-    responses = {
-        jsonResponse{id: uuid.New(), data: "fuck off", status: "OK"},
-    }
-    handleRequests()
-}
+    address := ":6080"
+    handler := http.NewServeMux()
 
+    handler.HandleFunc("/", homePage)
+
+    server := &http.Server{
+        Addr:    address,
+        Handler: handler,
+    }
+
+    log.Println("Starting server on", address)
+    log.Fatal(server.ListenAndServe())
+}
