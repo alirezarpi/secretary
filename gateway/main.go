@@ -1,42 +1,34 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/google/uuid"
+	"github.com/alirezarpi/secretary/api"
 )
 
-type jsonResponse struct {
-	UUID   string       `json:"uuid"`
-	Status string       `json:"status"`
-	Data   []string     `json:"data"`
+type requestData struct {
+	Inputs []map[string]interface{} `json:"data"`
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-    status := "OK"
-	response := jsonResponse{
-		UUID:   uuid.New().String(),
-		Status: status,
-        Data: []string{{"fdsf":"fsdf"}},
-    }
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+func home(w http.ResponseWriter, r *http.Request) {
+	api.responser(w, r, true, 200, map[string]interface{}{
+		"message": "Secretary is here ^^",
+	})
 }
 
 func main() {
-    address := ":6080"
-    handler := http.NewServeMux()
+	address := ":6080"
+	handler := http.NewServeMux()
 
-    handler.HandleFunc("/", homePage)
+	handler.HandleFunc("/", home)
+	handler.HandleFunc("/hz", api.healthCheck)
 
-    server := &http.Server{
-        Addr:    address,
-        Handler: handler,
-    }
+	server := &http.Server{
+		Addr:    address,
+		Handler: handler,
+	}
 
-    log.Println("Starting server on", address)
-    log.Fatal(server.ListenAndServe())
+	log.Println("Starting server on", address)
+	log.Fatal(server.ListenAndServe())
 }
