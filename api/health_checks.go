@@ -1,9 +1,12 @@
+package api
+
+import (
+	"net/http"
+)
 
 
-
-
-func healthCheck(w http.ResponseWriter, r *http.Request) {
-	responser(w, r, true, 200, map[string]interface{}{
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	Responser(w, r, true, 200, map[string]interface{}{
 		"backend": map[string]interface{}{
 			"message": "healthy",
 			"success": true,

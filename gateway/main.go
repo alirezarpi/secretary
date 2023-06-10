@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-
-	"github.com/alirezarpi/secretary/api"
+	
+	"secretary/alpha/api"
 )
 
 type requestData struct {
@@ -12,7 +12,14 @@ type requestData struct {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	api.responser(w, r, true, 200, map[string]interface{}{
+	if r.URL.Path != "/" {
+		api.Responser(w, r, false, 404, map[string]interface{}{
+		"message": "path not found",
+	})
+
+		return
+	}
+	api.Responser(w, r, true, 200, map[string]interface{}{
 		"message": "Secretary is here ^^",
 	})
 }
@@ -22,7 +29,7 @@ func main() {
 	handler := http.NewServeMux()
 
 	handler.HandleFunc("/", home)
-	handler.HandleFunc("/hz", api.healthCheck)
+	handler.HandleFunc("/hz", api.HealthCheck)
 
 	server := &http.Server{
 		Addr:    address,
