@@ -1,9 +1,10 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
-	
+
 	"secretary/alpha/api"
 )
 
@@ -24,17 +25,19 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	address := ":6080"
-	handler := http.NewServeMux()
+	
+	var listenAddr = flag.String("listenaddr", "0.0.0.0:6080", "secretary server address")
+	flag.Parse()
+	var handler = http.NewServeMux()
 
 	handler.HandleFunc("/", home)
 	handler.HandleFunc("/hz", api.HealthCheck)
 
-	server := &http.Server{
-		Addr:    address,
+	var server = &http.Server{
+		Addr:    *listenAddr,
 		Handler: handler,
 	}
 
-	log.Println("Starting server on", address)
+	log.Println("Starting server on", *listenAddr)
 	log.Fatal(server.ListenAndServe())
 }
