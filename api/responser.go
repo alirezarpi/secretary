@@ -14,14 +14,14 @@ type jsonResponse struct {
 }
 
 
-func Responser(w http.ResponseWriter, r *http.Request, status bool, statusCode int, response map[string]interface{}) {
+func Responser(w http.ResponseWriter, r *http.request, status bool, statusCode int, response map[string]interface{}) {
 	resp := jsonResponse{
 		UUID:   uuid.New().String(),
 		Sucess: status,
 		Data:   response,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	Middleware(w, r)
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(resp)
 }
