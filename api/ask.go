@@ -11,7 +11,7 @@ import (
 func Ask(w http.ResponseWriter, r *http.Request) {
 	Middleware(w, r)
 	switch r.Method {
-    case "POST":
+	case "POST":
 		reqBody, err := utils.HandleReqJson(r)
 		if err != nil {
 			log.Fatal(err)
