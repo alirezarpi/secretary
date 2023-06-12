@@ -13,16 +13,15 @@ RUN apk add --no-cache \
 
 COPY . .
 
-RUN go mod init github.com/alirezarpi/secretary && \
-    go mod tidy && \
-    go build ./gateway/main.go -o ./secretary
+RUN go mod tidy && \
+    go build -o ./secretary ./gateway/main.go 
 
 # -----------------------------------------------------------------------------
 #  Main Stage
 # -----------------------------------------------------------------------------
 FROM scratch
 
-COPY --from=build /go/bin/secretary /secretary/
+COPY --from=build /workspace/secretary /secretary/
 
 VOLUME /secretary/
 
