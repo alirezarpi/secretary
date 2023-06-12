@@ -5,24 +5,25 @@ FROM golang:alpine AS build
 
 ENV CGO_ENABLED=1
 
+WORKDIR /workspace
+
 RUN apk add --no-cache \
     gcc \
     musl-dev
 
-WORKDIR /workspace
+COPY . .
 
-COPY . /workspace/
-
-RUN \
-    go mod init github.com/mattn/sample && \
+RUN go mod init github.com/alirezarpi/secretary && \
     go mod tidy && \
-    go install -ldflags='-s -w -extldflags "-static"' ./simple.go
+    go build ./gateway/main.go -o ./secretary
 
 # -----------------------------------------------------------------------------
 #  Main Stage
 # -----------------------------------------------------------------------------
 FROM scratch
 
-COPY --from=build /go/bin/secretary /usr/local/bin/secretary
+COPY --from=build /go/bin/secretary /secretary/
 
-ENTRYPOINT [ "/usr/local/bin/secretary" ]
+VOLUME /secretary/
+
+ENTRYPOINT [ "/secretary/secretary" ]
