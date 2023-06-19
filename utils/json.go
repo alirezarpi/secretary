@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"encoding/json"
 	"net/http"
 	"io/ioutil"
@@ -25,54 +26,30 @@ func HandleReqJson(r *http.Request) (map[string]interface{}, error) {
 	return data, nil
 }
 
-func HandleTableToJSON(dbPath, tableName string) ([]byte, error) {
-	// FIXME create function that returns db obj
-	db, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	query := "SELECT * FROM " + tableName
-
-	rows, err := db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	columns, err := rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-
-	values := make([]interface{}, len(columns))
-	for i := range values {
-		values[i] = new(interface{})
-	}
-
-	results := make([]map[string]interface{}, 0)
-
+func HandleTableToJSON(columns []string, rows *sql.Rows) ([]map[string]interface{}, error) {
+	var results []map[string]interface{} = []map[string]interface{}{}
 	for rows.Next() {
-		err := rows.Scan(values...)
+		row := make(map[string]interface{})
+		values := make([]interface{}, len(columns))
+		columnPointers := make([]interface{}, len(columns))
+		for i := range columns {
+			columnPointers[i] = &values[i]
+		}
+
+		err := rows.Scan(columnPointers...)
 		if err != nil {
-			return nil, err
+			log.Fatal("Error in internal.GetAllAsk: ", err)
+			return []map[string]interface{}{}, err
 		}
 
-		rowData := make(map[string]interface{})
-
-		for i, col := range values {
-			rowData[columns[i]] = *col.(*interface{})
+		for i, column := range columns {
+			val := values[i]
+			row[column] = val
 		}
 
-		results = append(results, rowData)
+		results = append(results, row)
 	}
 
-	jsonData, err := json.Marshal(results)
-	if err != nil {
-		return nil, err
-	}
-
-	return jsonData, nil
+	return results, nil
 }
 
