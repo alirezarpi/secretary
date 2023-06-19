@@ -25,7 +25,7 @@ func Ask(w http.ResponseWriter, r *http.Request) {
 		queryParam := r.URL.Query().Get("uuid")
 		if queryParam == "" {
 			Responser(w, r, true, 200, map[string]interface{}{
-				"ask_data": internal.GetAllAsk(),
+				"ask_data": internal.GetAsk(),
 			})
 		} else {
 			Responser(w, r, true, 200, map[string]interface{}{

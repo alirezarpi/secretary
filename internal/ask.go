@@ -27,38 +27,30 @@ func CreateAsk(what string, reason string) bool {
 	return true
 }
 
-func GetAllAsk() []map[string]interface{} {
-	query := fmt.Sprintf(`SELECT * from asks_for`)
+func GetAsk(uuid ...string) []map[string]interface{} {
+	var query string
+	if len(uuid) > 0 {
+		query = fmt.Sprintf(`SELECT * FROM asks_for WHERE uuid='%s'`, uuid[0])
+	} else {
+		query = `SELECT * FROM asks_for`
+	}
 
 	rows, err := storage.DatabaseQuery(query)
+	if err != nil {
+		log.Fatal("Error in GetAsk: ", err)
+		return []map[string]interface{}{}
+	}
+	defer rows.Close()
+
 	columns, err := rows.Columns()
 	if err != nil {
-		log.Fatal("error in getallask: ", err)
+		log.Fatal("Error in GetAsk: ", err)
 		return []map[string]interface{}{}
 	}
 
 	results, err := utils.HandleTableToJSON(columns, rows)
 	if err != nil {
-		log.Fatal("error in getallask: ", err)
-		return []map[string]interface{}{}
-	}
-
-	return results
-}
-
-func GetAsk(uuid string) []map[string]interface{} {
-	query := fmt.Sprintf(`SELECT * from asks_for where uuid='%s'`, uuid)
-	
-	rows, err := storage.DatabaseQuery(query)
-	columns, err := rows.Columns()
-	if err != nil {
-		log.Fatal("error in getallask: ", err)
-		return []map[string]interface{}{}
-	}
-
-	results, err := utils.HandleTableToJSON(columns, rows)
-	if err != nil {
-		log.Fatal("error in getallask: ", err)
+		log.Fatal("Error in GetAsk: ", err)
 		return []map[string]interface{}{}
 	}
 
