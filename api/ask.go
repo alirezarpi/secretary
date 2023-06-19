@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"secretary/alpha/internal"
 	"secretary/alpha/utils"
 )
 
@@ -17,13 +18,12 @@ func Ask(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		} else {
 			Responser(w, r, true, 200, map[string]interface{}{
-				"echo": reqBody,
+				"ask": internal.CreateAsk(reqBody["what"].(string), reqBody["reason"].(string)),
 			})
 		}
 	default:
 		Responser(w, r, true, 200, map[string]interface{}{
-			"message": "TBD",
-			},
-		)
+			"ask_list": internal.GetAllAsk(),
+		})
 	}
 }

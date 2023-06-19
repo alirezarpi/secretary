@@ -1,19 +1,25 @@
 package storage
 
 import (
-	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"database/sql"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
-func DatabaseInit() {
+func OpenDatabase() (*sql.DB) {
 	db, err := sql.Open("sqlite3", "./storage/secretary.db")
 	if err != nil {
 		log.Fatal(err)
+		return nil
 	}
-	defer db.Close()
+	return db
+}
 
-	sqlStmt := `CREATE TABLE IF NOT EXISTS asks_for (
+func DatabaseInit() bool {
+	db := OpenDatabase()
+
+	query := `CREATE TABLE IF NOT EXISTS asks_for (
 	  uuid TEXT NOT NULL PRIMARY KEY,
 	  what TEXT NOT NULL,
 	  created_time DATETIME NOT NULL,
@@ -22,9 +28,11 @@ func DatabaseInit() {
 	  status TEXT NOT NULL
 	);`
 
-	_, err = db.Exec(sqlStmt)
+	_, err := db.Exec(query)
 	if err != nil {
-		log.Printf("%q: %s\n", err, sqlStmt)
-		return
+		log.Fatal("Error in DatabaseInit: ", err)
+		return false
 	}
+
+	return true
 }
