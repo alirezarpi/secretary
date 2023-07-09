@@ -20,26 +20,38 @@ func OpenDatabase() (*sql.DB) {
 func DatabaseInit() bool {
 	db := OpenDatabase()
 	
-	initTables := []string{ // put columns too
-		"asks_for", 
-		"users",
+	table := "asks_for"
+	query := fmt.Sprintf(`
+	CREATE TABLE IF NOT EXISTS %s (
+	  uuid TEXT NOT NULL PRIMARY KEY,
+	  what TEXT NOT NULL,
+	  created_time DATETIME NOT NULL,
+	  modified_time DATETIME NOT NULL,
+	  reason TEXT NOT NULL,
+	  status TEXT NOT NULL
+	);`, table)
+
+	_, err := db.Exec(query)
+	if err != nil {
+		log.Fatal("Error in DatabaseInit table ", table, " : ", err)
+		return false
 	}
 
-	for _, table := range initTables {
-		query := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
-		  uuid TEXT NOT NULL PRIMARY KEY,
-		  what TEXT NOT NULL,
-		  created_time DATETIME NOT NULL,
-		  modified_time DATETIME NOT NULL,
-		  reason TEXT NOT NULL,
-		  status TEXT NOT NULL
-		);`, table)
+	table = "local_user"
+	query = fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
+		uuid TEXT NOT NULL PRIMARY KEY,
+		username TEXT NOT NULL,
+		password_hash TEXT NOT NULL,
+		active BOOLEAN DEFAULT TRUE,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		UNIQUE (uuid, username)
+	);`, table)
 
-		_, err := db.Exec(query)
-		if err != nil {
-			log.Fatal("Error in DatabaseInit table ", table, " : ", err)
-			return false
-		}
+	_, err = db.Exec(query)
+	if err != nil {
+		log.Fatal(err)
+		return false
 	}
 	
 	return true

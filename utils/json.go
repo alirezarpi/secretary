@@ -1,11 +1,12 @@
 package utils
 
 import (
-	"log"
-	"encoding/json"
-	"net/http"
-	"io/ioutil"
 	"database/sql"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
 )

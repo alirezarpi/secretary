@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
+func HomeAPI(w http.ResponseWriter, r *http.Request) {
 	Middleware(w, r)
 	if r.URL.Path != "/" {
 		Responser(w, r, false, 404, map[string]interface{}{

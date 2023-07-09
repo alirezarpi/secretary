@@ -6,7 +6,7 @@ import (
 )
 
 
-func HealthCheck(w http.ResponseWriter, r *http.Request) {
+func HealthCheckAPI(w http.ResponseWriter, r *http.Request) {
 	Middleware(w, r)
 	Responser(w, r, true, 200, map[string]interface{}{
 		"backend": map[string]interface{}{

@@ -9,27 +9,30 @@ import (
 )
 
 
-func AskAPI(w http.ResponseWriter, r *http.Request) {
+func UserAPI(w http.ResponseWriter, r *http.Request) {
 	Middleware(w, r)
 	switch r.Method {
 	case "POST":
 		reqBody, err := utils.HandleReqJson(r)
 		if err != nil {
 			log.Println(err)
+			Responser(w, r, true, 400, map[string]interface{}{
+				"message": "invalid data",
+			})
 		}
 		// FIXME Validators needed
-		Responser(w, r, true, 200, map[string]interface{}{
-			"ask_data": internal.CreateAsk(reqBody["what"].(string), reqBody["reason"].(string)),
+		Responser(w, r, true, 201, map[string]interface{}{
+			"user_data": internal.CreateUser(reqBody["username"].(string), reqBody["password"].(string), reqBody["active"].(bool)),
 		})
 	case "GET":
-		queryParam := r.URL.Query().Get("uuid")
+		queryParam := r.URL.Query().Get("username")
 		if queryParam == "" {
 			Responser(w, r, true, 200, map[string]interface{}{
-				"ask_data": internal.GetAsk(),
+				"user_data": internal.GetUser(),
 			})
 		} else {
 			Responser(w, r, true, 200, map[string]interface{}{
-				"ask_data": internal.GetAsk(queryParam),
+				"user_data": internal.GetUser(queryParam),
 			})
 		}
 	default:

@@ -16,9 +16,10 @@ func main() {
 	storage.DatabaseInit()
 	var handler = http.NewServeMux()
 
-	handler.HandleFunc("/", api.Home)
-	handler.HandleFunc("/hz", api.HealthCheck)
-	handler.HandleFunc("/ask", api.Ask)
+	handler.HandleFunc("/", api.HomeAPI)
+	handler.HandleFunc("/hz", api.HealthCheckAPI)
+	handler.HandleFunc("/ask", api.AskAPI)
+	handler.HandleFunc("/user", api.UserAPI)
 
 	var server = &http.Server{
 		Addr:    *listenAddr,

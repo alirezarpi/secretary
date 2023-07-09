@@ -18,7 +18,7 @@ func DatabaseQuery(query string) (*sql.Rows, error) {
 	}
 	defer db.Close()
 
-	log.Println("DatabaseQuery:", query)
+	//log.Println("DatabaseQuery:", query)
 	return rows, nil
 }
 

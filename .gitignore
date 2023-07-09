@@ -25,3 +25,6 @@ go.work
 /storage/**.sqlite3
 *.db
 /storage/**.db
+
+# Air
+**/tmp/**
