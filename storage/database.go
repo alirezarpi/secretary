@@ -54,5 +54,6 @@ func DatabaseInit() bool {
 		return false
 	}
 	
+	log.Println("Database successfully initiated")
 	return true
 }
