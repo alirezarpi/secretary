@@ -43,8 +43,8 @@ func DatabaseInit() bool {
 		username TEXT NOT NULL,
 		password_hash TEXT NOT NULL,
 		active BOOLEAN DEFAULT TRUE,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		UNIQUE (uuid, username)
 	);`, table)
 

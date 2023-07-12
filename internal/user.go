@@ -27,13 +27,12 @@ func CreateUser(username string, password string, active bool) bool {
 		return false
 	}
 
-	// FIXME https://stackoverflow.com/a/36164458
-	query := fmt.Sprintf(`
-		INSERT INTO local_user (uuid, username, password_hash, active, created_date, modified_time)
-		VALUES (%s, %s, %s, %s, %s, %s)
-	`, user.UUID, user.Username, user.PasswordHash, user.Active, user.CreatedTime, user.ModifiedTime)
+	query := `
+		INSERT INTO local_user (uuid, username, password_hash, active, created_time, updated_time)
+		VALUES (?, ?, ?, ?, ?, ?)
+	`
 
-	_, err = storage.DatabaseExec(query)
+	_, err = storage.DatabaseExec(query, user.UUID, user.Username, user.PasswordHash, user.Active, user.CreatedTime, user.ModifiedTime)
 	if err != nil {
 		log.Fatal(err)
 		return false

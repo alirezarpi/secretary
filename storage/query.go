@@ -18,14 +18,13 @@ func DatabaseQuery(query string) (*sql.Rows, error) {
 	}
 	defer db.Close()
 
-	//log.Println("DatabaseQuery:", query)
 	return rows, nil
 }
 
-func DatabaseExec(query string) (*sql.Result, error) {
+func DatabaseExec(query string, args ...interface{}) (*sql.Result, error) {
 	db := OpenDatabase()
 	
-	result, err := db.Exec(query)
+	result, err := db.Exec(query, args...)
 	if err != nil {
 		log.Fatal(err, ": ", query)
 		return nil, err
