@@ -10,6 +10,8 @@ import (
 
 
 func CreateUser(username string, password string, active bool) bool {
+	// NOTE add check on duplicate user
+	// FIXME Validate
 	uuid := utils.UUID()
 	createdTime := utils.CurrentTime()
 
