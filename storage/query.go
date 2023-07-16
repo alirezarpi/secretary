@@ -23,7 +23,7 @@ func DatabaseQuery(query string) (*sql.Rows, error) {
 
 func DatabaseExec(query string, args ...interface{}) (*sql.Result, error) {
 	db := OpenDatabase()
-	
+
 	result, err := db.Exec(query, args...)
 	if err != nil {
 		log.Fatal(err, ": ", query)

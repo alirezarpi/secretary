@@ -33,7 +33,6 @@ func CreateUser(username string, password string, active bool) bool {
 		INSERT INTO local_user (uuid, username, password_hash, active, created_time, updated_time)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
-
 	_, err = storage.DatabaseExec(query, user.UUID, user.Username, user.PasswordHash, user.Active, user.CreatedTime, user.ModifiedTime)
 	if err != nil {
 		log.Fatal(err)
