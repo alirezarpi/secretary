@@ -4,10 +4,35 @@ import (
 	"fmt"
 	"log"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"secretary/alpha/storage"
 	"secretary/alpha/utils"
 )
 
+type User struct {
+	UUID			string
+	Username		string
+	PasswordHash	string
+	Active			bool
+	CreatedTime		string
+	ModifiedTime	string
+}
+
+
+func (u *User) SetPassword(password string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	u.PasswordHash = string(hash)
+	return nil
+}
+
+func (u *User) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+	return err == nil
+}
 
 func CreateUser(username string, password string, active bool) bool {
 	// NOTE add check on duplicate user
@@ -15,7 +40,7 @@ func CreateUser(username string, password string, active bool) bool {
 	uuid := utils.UUID()
 	createdTime := utils.CurrentTime()
 
-	user := storage.User{
+	user := User{
 		UUID: uuid,
 		Username: username,
 		Active: active,
