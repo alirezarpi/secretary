@@ -23,12 +23,12 @@ func DatabaseInit() bool {
 	table := "asks_for"
 	query := fmt.Sprintf(`
 	CREATE TABLE IF NOT EXISTS %s (
-	  uuid TEXT NOT NULL PRIMARY KEY,
-	  what TEXT NOT NULL,
-	  created_time DATETIME NOT NULL,
-	  modified_time DATETIME NOT NULL,
-	  reason TEXT NOT NULL,
-	  status TEXT NOT NULL
+		uuid TEXT NOT NULL PRIMARY KEY,
+		what TEXT NOT NULL,
+		created_time DATETIME NOT NULL,
+		modified_time DATETIME NOT NULL,
+		reason TEXT NOT NULL,
+		status TEXT NOT NULL
 	);`, table)
 
 	_, err := db.Exec(query)
