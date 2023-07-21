@@ -5,7 +5,6 @@ import (
 	"secretary/alpha/storage"
 )
 
-
 func HealthCheckAPI(w http.ResponseWriter, r *http.Request) {
 	Middleware(w, r)
 	Responser(w, r, true, 200, map[string]interface{}{
@@ -17,5 +16,3 @@ func HealthCheckAPI(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 }
-
-

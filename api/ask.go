@@ -8,9 +8,8 @@ import (
 	"secretary/alpha/utils"
 )
 
-
 func AskAPI(w http.ResponseWriter, r *http.Request) {
-	if (Middleware(w, r)) {
+	if Middleware(w, r) {
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)

@@ -13,7 +13,6 @@ type jsonResponse struct {
 	Data   map[string]interface{} `json:"data"`
 }
 
-
 func Responser(w http.ResponseWriter, r *http.Request, status bool, statusCode int, response map[string]interface{}) {
 	resp := jsonResponse{
 		UUID:   uuid.New().String(),
@@ -25,5 +24,3 @@ func Responser(w http.ResponseWriter, r *http.Request, status bool, statusCode i
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(resp)
 }
-
-

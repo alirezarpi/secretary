@@ -6,17 +6,16 @@ import (
 	"net/http"
 
 	"secretary/alpha/api"
-	"secretary/alpha/storage"
 	"secretary/alpha/internal"
+	"secretary/alpha/storage"
 )
-
 
 func main() {
 	var listenAddr = flag.String("listenaddr", "0.0.0.0:6080", "secretary server address")
 	flag.Parse()
 	storage.DatabaseInit()
 	internal.ShowBanner("./banner.txt")
-	
+
 	var handler = http.NewServeMux()
 
 	handler.HandleFunc("/", api.HomeAPI)
@@ -28,7 +27,7 @@ func main() {
 		Addr:    *listenAddr,
 		Handler: handler,
 	}
-	
+
 	log.Println("Starting server on", *listenAddr)
 	log.Fatal(server.ListenAndServe())
 }

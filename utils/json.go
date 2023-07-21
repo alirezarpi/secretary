@@ -10,7 +10,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-
 func HandleReqJson(r *http.Request) (map[string]interface{}, error) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -52,4 +51,3 @@ func HandleTableToJSON(columns []string, rows *sql.Rows) ([]map[string]interface
 
 	return results, nil
 }
-

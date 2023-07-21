@@ -1,10 +1,9 @@
 package internal
 
 import (
-	"log"
 	"io/ioutil"
+	"log"
 )
-
 
 func ShowBanner(filepath string) {
 	content, err := ioutil.ReadFile("banner.txt")

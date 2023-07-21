@@ -11,14 +11,13 @@ import (
 )
 
 type User struct {
-	UUID			string
-	Username		string
-	PasswordHash	string
-	Active			bool
-	CreatedTime		string
-	ModifiedTime	string
+	UUID         string
+	Username     string
+	PasswordHash string
+	Active       bool
+	CreatedTime  string
+	ModifiedTime string
 }
-
 
 func (u *User) SetPassword(password string) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -41,10 +40,10 @@ func CreateUser(username string, password string, active bool) bool {
 	createdTime := utils.CurrentTime()
 
 	user := User{
-		UUID: uuid,
-		Username: username,
-		Active: active,
-		CreatedTime: createdTime,
+		UUID:         uuid,
+		Username:     username,
+		Active:       active,
+		CreatedTime:  createdTime,
 		ModifiedTime: createdTime,
 	}
 
@@ -96,4 +95,3 @@ func GetUser(username ...string) []map[string]interface{} {
 
 	return results
 }
-

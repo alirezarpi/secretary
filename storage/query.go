@@ -7,10 +7,9 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-
 func DatabaseQuery(query string) (*sql.Rows, error) {
 	db := OpenDatabase()
-	
+
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Fatal(err, ": ", query)
@@ -35,8 +34,7 @@ func DatabaseExec(query string, args ...interface{}) (*sql.Result, error) {
 		return nil, err
 	}
 	defer db.Close()
-	
+
 	log.Println("DatabaseExec, Rows Affected:", rowCount, " - Query:", query)
 	return &result, nil
 }
-

@@ -1,14 +1,14 @@
 package storage
 
 import (
-	"log"
-	"fmt"
 	"database/sql"
+	"fmt"
+	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func OpenDatabase() (*sql.DB) {
+func OpenDatabase() *sql.DB {
 	db, err := sql.Open("sqlite3", "./storage/secretary.db")
 	if err != nil {
 		log.Fatal(err)
@@ -19,7 +19,7 @@ func OpenDatabase() (*sql.DB) {
 
 func DatabaseInit() bool {
 	db := OpenDatabase()
-	
+
 	table := "asks_for"
 	query := fmt.Sprintf(`
 	CREATE TABLE IF NOT EXISTS %s (
@@ -53,7 +53,7 @@ func DatabaseInit() bool {
 		log.Fatal(err)
 		return false
 	}
-	
+
 	log.Println("Database successfully initiated")
 	return true
 }

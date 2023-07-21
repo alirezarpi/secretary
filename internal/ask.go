@@ -9,7 +9,6 @@ import (
 	"secretary/alpha/utils"
 )
 
-
 func CreateAsk(what string, reason string) bool {
 	uuid := utils.UUID()
 	createdTime := utils.CurrentTime()
@@ -56,4 +55,3 @@ func GetAsk(uuid ...string) []map[string]interface{} {
 
 	return results
 }
-
