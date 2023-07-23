@@ -19,6 +19,14 @@ type User struct {
 	ModifiedTime string
 }
 
+type SecureUser struct {
+	UUID         string
+	Username     string
+	Active       bool
+	CreatedTime  string
+	ModifiedTime string
+}
+
 func (u *User) SetPassword(password string) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -33,19 +41,15 @@ func (u *User) CheckPassword(password string) bool {
 	return err == nil
 }
 
-func CreateUser(username string, password string, active bool) bool {
+func (u *User) CreateUser(username string, password string, active bool) SecureUser {
 	// NOTE add check on duplicate user
 	// FIXME Validate
-	uuid := utils.UUID()
 	createdTime := utils.CurrentTime()
 
-	user := User{
-		UUID:         uuid,
-		Username:     username,
-		Active:       active,
-		CreatedTime:  createdTime,
-		ModifiedTime: createdTime,
-	}
+	u.UUID = utils.UUID()
+	u.Username = username
+	u.CreatedTime = createdTime
+	u.ModifiedTime = createdTime
 
 	err := user.SetPassword(password)
 	if err != nil {
@@ -57,13 +61,16 @@ func CreateUser(username string, password string, active bool) bool {
 		INSERT INTO local_user (uuid, username, password_hash, active, created_time, updated_time)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
-	_, err = storage.DatabaseExec(query, user.UUID, user.Username, user.PasswordHash, user.Active, user.CreatedTime, user.ModifiedTime)
+	_, err = storage.DatabaseExec(query, u.UUID, u.Username, u.PasswordHash, u.Active, u.CreatedTime, u.ModifiedTime)
 	if err != nil {
 		log.Fatal(err)
 		return false
 	}
 
-	return true
+	return User{
+		UUID = u.UUID,
+		Username = u.Username,
+	}
 }
 
 func GetUser(username ...string) []map[string]interface{} {

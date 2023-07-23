@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/sessions"
 
 	"secretary/alpha/utils"
+	"secretary/alpha/internal"
 )
 
 func LoginAPI(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +29,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	username := reqBody["username"].(string)
 	password := reqBody["password"].(string)
 
-	storedPassword, exists := users[username]
+	storedPassword, exists := internal.GetUser(username)
 	if exists {
 		// It returns a new session if the sessions doesn't exist
 		session, _ := store.Get(r, "session.id")
@@ -37,7 +38,9 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 			// Saves all sessions used during the current request
 			session.Save(r, w)
 		} else {
-			http.Error(w, "Invalid Credentials", http.StatusUnauthorized)
+			Responser(w, r, false, 401, map[string]interface{}{
+				"message": "Unauthorized",
+			})
 		}
 		w.Write([]byte("Login successfully!"))
 	}
