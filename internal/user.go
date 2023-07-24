@@ -19,14 +19,6 @@ type User struct {
 	ModifiedTime string
 }
 
-type SecureUser struct {
-	UUID         string
-	Username     string
-	Active       bool
-	CreatedTime  string
-	ModifiedTime string
-}
-
 func (u *User) SetPassword(password string) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -41,8 +33,8 @@ func (u *User) CheckPassword(password string) bool {
 	return err == nil
 }
 
-func (u *User) CreateUser(username string, password string, active bool) SecureUser {
-	// NOTE add check on duplicate user
+func (u *User) CreateUser(username string, password string, active bool) *User {
+	// NOTE add check on duplicate username
 	// FIXME Validate
 	createdTime := utils.CurrentTime()
 
@@ -51,10 +43,10 @@ func (u *User) CreateUser(username string, password string, active bool) SecureU
 	u.CreatedTime = createdTime
 	u.ModifiedTime = createdTime
 
-	err := user.SetPassword(password)
+	err := u.SetPassword(password)
 	if err != nil {
 		log.Fatal("SetPassword Error: ", err)
-		return false
+		return nil
 	}
 
 	query := `
@@ -64,12 +56,12 @@ func (u *User) CreateUser(username string, password string, active bool) SecureU
 	_, err = storage.DatabaseExec(query, u.UUID, u.Username, u.PasswordHash, u.Active, u.CreatedTime, u.ModifiedTime)
 	if err != nil {
 		log.Fatal(err)
-		return false
+		return nil
 	}
 
-	return User{
-		UUID = u.UUID,
-		Username = u.Username,
+	return &User{
+		UUID: u.UUID,
+		Username: u.Username,
 	}
 }
 

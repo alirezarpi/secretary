@@ -15,13 +15,20 @@ func UserAPI(w http.ResponseWriter, r *http.Request) {
 			reqBody, err := utils.HandleReqJson(r)
 			if err != nil {
 				log.Println(err)
-				Responser(w, r, true, 400, map[string]interface{}{
-					"message": "invalid data",
+				Responser(w, r, false, 400, map[string]interface{}{
+					"error": "invalid data",
 				})
 			}
 			// FIXME Validators needed
+			user := internal.CreateUser(reqBody["username"].(string), reqBody["password"].(string), reqBody["active"].(bool))
+			if (user != nil) {
+				log.Println(err)
+				Responser(w, r, false, 400, map[string]interface{}{
+					"error": "invalid data",
+				})
+			}
 			Responser(w, r, true, 201, map[string]interface{}{
-				"user_data": internal.CreateUser(reqBody["username"].(string), reqBody["password"].(string), reqBody["active"].(bool)),
+				"user_data": "",
 			})
 		case "GET":
 			queryParam := r.URL.Query().Get("username")
@@ -36,12 +43,12 @@ func UserAPI(w http.ResponseWriter, r *http.Request) {
 			}
 		default:
 			Responser(w, r, false, 405, map[string]interface{}{
-				"message": "method not allowed",
+				"error": "method not allowed",
 			})
 		}
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{
-			"message": "Unauthorized",
+			"error": "Unauthorized",
 		})
 	}
 }
