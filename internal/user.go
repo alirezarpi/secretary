@@ -33,20 +33,25 @@ func (u *User) CheckPassword(password string) bool {
 	return err == nil
 }
 
-func (u *User) CreateUser(username string, password string, active bool) *User {
-	// NOTE add check on duplicate username
-	// FIXME Validate
+func (u *User) CreateUser(username string, password string, active bool) error {
+	existingUser := u.GetUser(username)
+	if existingUser != nil {
+		return fmt.Errorf("username already exists")
+	}
+
+	// FIXME Add validation code here ...
+
 	createdTime := utils.CurrentTime()
 
 	u.UUID = utils.UUID()
 	u.Username = username
 	u.CreatedTime = createdTime
 	u.ModifiedTime = createdTime
+	u.Active = active
 
 	err := u.SetPassword(password)
 	if err != nil {
-		log.Fatal("SetPassword Error: ", err)
-		return nil
+		return fmt.Errorf("SetPassword Error: %v", err)
 	}
 
 	query := `
@@ -55,42 +60,82 @@ func (u *User) CreateUser(username string, password string, active bool) *User {
 	`
 	_, err = storage.DatabaseExec(query, u.UUID, u.Username, u.PasswordHash, u.Active, u.CreatedTime, u.ModifiedTime)
 	if err != nil {
-		log.Fatal(err)
-		return nil
+		return fmt.Errorf("Error in CreateUser: %v", err)
 	}
 
-	return &User{
-		UUID: u.UUID,
-		Username: u.Username,
-	}
+	return nil
 }
 
-func GetUser(username ...string) []map[string]interface{} {
-	var query string
-	if len(username) > 0 {
-		query = fmt.Sprintf(`SELECT * FROM local_user WHERE username='%s'`, username[0])
-	} else {
-		query = `SELECT * FROM local_user`
-	}
+func (u *User) GetUser(username string) *User {
+	query := fmt.Sprintf(`SELECT * FROM local_user WHERE username='%s'`, username)
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
 		log.Fatal("Error in GetUser: ", err)
-		return []map[string]interface{}{}
+		return nil
 	}
 	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {
 		log.Fatal("Error in GetUser: ", err)
-		return []map[string]interface{}{}
+		return nil
 	}
 
 	results, err := utils.HandleTableToJSON(columns, rows)
 	if err != nil {
 		log.Fatal("Error in GetUser: ", err)
-		return []map[string]interface{}{}
+		return nil
 	}
 
-	return results
+	if len(results) == 0 {
+		return nil
+	}
+
+	return &User{
+		UUID:         results[0]["uuid"].(string),
+		Username:     results[0]["username"].(string),
+		//PasswordHash: results[0]["password_hash"].(string),
+		Active:       results[0]["active"].(bool),
+		CreatedTime:  results[0]["created_time"].(string),
+		ModifiedTime: results[0]["modified_time"].(string),
+	}
+}
+
+func (u *User) GetUsers() []*User {
+	query := `SELECT * FROM local_user`
+
+	rows, err := storage.DatabaseQuery(query)
+	if err != nil {
+		log.Fatal("Error in GetUsers: ", err)
+		return nil
+	}
+	defer rows.Close()
+
+	columns, err := rows.Columns()
+	if err != nil {
+		log.Fatal("Error in GetUsers: ", err)
+		return nil
+	}
+
+	results, err := utils.HandleTableToJSON(columns, rows)
+	if err != nil {
+		log.Fatal("Error in GetUsers: ", err)
+		return nil
+	}
+
+	users := make([]*User, 0, len(results))
+	for _, res := range results {
+		user := &User{
+			UUID:         res["uuid"].(string),
+			Username:     res["username"].(string),
+			//PasswordHash: res["password_hash"].(string),
+			Active:       res["active"].(bool),
+			CreatedTime:  res["created_time"].(string),
+			ModifiedTime: res["modified_time"].(string),
+		}
+		users = append(users, user)
+	}
+
+	return users
 }

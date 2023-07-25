@@ -29,7 +29,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	username := reqBody["username"].(string)
 	password := reqBody["password"].(string)
 
-	storedPassword, exists := internal.GetUser(username)
+	storedPassword := internal.GetUser(username)
 	if exists {
 		// It returns a new session if the sessions doesn't exist
 		session, _ := store.Get(r, "session.id")
