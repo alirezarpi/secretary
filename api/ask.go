@@ -33,12 +33,12 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 			}
 		default:
 			Responser(w, r, false, 405, map[string]interface{}{
-				"message": "method not allowed",
+				"error": "method not allowed",
 			})
 		}
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{
-			"message": "Unauthorized",
+			"error": "Unauthorized",
 		})
 	}
 }

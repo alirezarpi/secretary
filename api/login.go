@@ -29,20 +29,23 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	username := reqBody["username"].(string)
 	password := reqBody["password"].(string)
 
-	storedPassword := internal.GetUser(username)
-	if exists {
-		// It returns a new session if the sessions doesn't exist
-		session, _ := store.Get(r, "session.id")
-		if storedPassword == password {
-			session.Values["authenticated"] = true
-			// Saves all sessions used during the current request
-			session.Save(r, w)
-		} else {
-			Responser(w, r, false, 401, map[string]interface{}{
-				"message": "Unauthorized",
-			})
-		}
-		w.Write([]byte("Login successfully!"))
+	user := &internal.User{}
+	result := user.GetUser(username)
+	if result == nil {
+		Responser(w, r, false, 401, map[string]interface{}{
+			"message": "Unauthorized",
+		})
 	}
-
+	session, _ := store.Get(r, "session.id")
+	if user.CheckPassword(password) {
+		session.Values["authenticated"] = true
+		session.Save(r, w)
+	} else {
+		Responser(w, r, false, 401, map[string]interface{}{
+			"message": "Unauthorized",
+		})
+	}
+	Responser(w, r, true, 200, map[string]interface{}{
+		"message": "login successfully",
+	})
 }

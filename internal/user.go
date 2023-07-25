@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -55,7 +56,7 @@ func (u *User) CreateUser(username string, password string, active bool) error {
 	}
 
 	query := `
-		INSERT INTO local_user (uuid, username, password_hash, active, created_time, updated_time)
+		INSERT INTO local_user (uuid, username, password_hash, active, created_time, modified_time)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
 	_, err = storage.DatabaseExec(query, u.UUID, u.Username, u.PasswordHash, u.Active, u.CreatedTime, u.ModifiedTime)
@@ -95,10 +96,10 @@ func (u *User) GetUser(username string) *User {
 	return &User{
 		UUID:         results[0]["uuid"].(string),
 		Username:     results[0]["username"].(string),
-		//PasswordHash: results[0]["password_hash"].(string),
+		PasswordHash: results[0]["password_hash"].(string),
 		Active:       results[0]["active"].(bool),
-		CreatedTime:  results[0]["created_time"].(string),
-		ModifiedTime: results[0]["modified_time"].(string),
+		CreatedTime:  results[0]["created_time"].(time.Time).Format(time.RFC3339),
+		ModifiedTime: results[0]["modified_time"].(time.Time).Format(time.RFC3339),
 	}
 }
 
@@ -126,13 +127,15 @@ func (u *User) GetUsers() []*User {
 
 	users := make([]*User, 0, len(results))
 	for _, res := range results {
+		println(res["created_time"].(time.Time).Format(time.RFC3339))
+		println(res["modified_time"].(time.Time).Format(time.RFC3339))
 		user := &User{
 			UUID:         res["uuid"].(string),
 			Username:     res["username"].(string),
-			//PasswordHash: res["password_hash"].(string),
+			PasswordHash: res["password_hash"].(string),
 			Active:       res["active"].(bool),
-			CreatedTime:  res["created_time"].(string),
-			ModifiedTime: res["modified_time"].(string),
+			CreatedTime:  res["created_time"].(time.Time).Format(time.RFC3339),
+			ModifiedTime: res["modified_time"].(time.Time).Format(time.RFC3339),
 		}
 		users = append(users, user)
 	}

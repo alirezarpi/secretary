@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -9,7 +10,9 @@ import (
 )
 
 func UserAPI(w http.ResponseWriter, r *http.Request) {
-	if Middleware(w, r) {
+	// TODO remove secure=false from Middleware, this API is important to be run by admins only
+	if Middleware(w, r, false) {
+		user := &internal.User{}
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
@@ -19,26 +22,25 @@ func UserAPI(w http.ResponseWriter, r *http.Request) {
 					"error": "invalid data",
 				})
 			}
-			// FIXME Validators needed
-			user := internal.CreateUser(reqBody["username"].(string), reqBody["password"].(string), reqBody["active"].(bool))
-			if (user != nil) {
-				log.Println(err)
+			err = user.CreateUser(reqBody["username"].(string), reqBody["password"].(string), reqBody["active"].(bool))
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Error creating user: %v", err), http.StatusInternalServerError)
 				Responser(w, r, false, 400, map[string]interface{}{
 					"error": "invalid data",
 				})
 			}
 			Responser(w, r, true, 201, map[string]interface{}{
-				"user_data": "",
+				"user_data": "username " + reqBody["username"].(string) + " created successfully",
 			})
 		case "GET":
 			queryParam := r.URL.Query().Get("username")
 			if queryParam == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"user_data": internal.GetUser(),
+					"user_data": user.GetUsers(),
 				})
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"user_data": internal.GetUser(queryParam),
+					"user_data": user.GetUser(queryParam),
 				})
 			}
 		default:
