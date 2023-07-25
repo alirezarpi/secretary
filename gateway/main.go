@@ -22,6 +22,7 @@ func main() {
 	handler.HandleFunc("/hz", api.HealthCheckAPI)
 	handler.HandleFunc("/ask", api.AskAPI)
 	handler.HandleFunc("/user", api.UserAPI)
+	handler.HandleFunc("/login", api.LoginAPI)
 
 	var server = &http.Server{
 		Addr:    *listenAddr,

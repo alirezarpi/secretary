@@ -10,8 +10,7 @@ import (
 )
 
 func UserAPI(w http.ResponseWriter, r *http.Request) {
-	// TODO remove secure=false from Middleware, this API is important to be run by admins only
-	if Middleware(w, r, false) {
+	if Middleware(w, r) {
 		user := &internal.User{}
 		switch r.Method {
 		case "POST":

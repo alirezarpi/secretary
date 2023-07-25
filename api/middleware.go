@@ -11,7 +11,7 @@ func setHeaders(w http.ResponseWriter) {
 }
 
 func isAuthenticated(r *http.Request) interface{} {
-	// FIXME change the secret
+	// FIXME change the secret 
 	var store = sessions.NewCookieStore([]byte("my_secret_key"))
 	session, _ := store.Get(r, "session.id")
 	authenticated := session.Values["authenticated"]
