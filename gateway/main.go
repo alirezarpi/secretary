@@ -20,7 +20,7 @@ func main() {
 
 	handler.HandleFunc("/", api.HomeAPI)
 	handler.HandleFunc("/hz", api.HealthCheckAPI)
-	handler.HandleFunc("/ask", api.AskAPI)
+	handler.HandleFunc("/askfor", api.AskAPI)
 	handler.HandleFunc("/user", api.UserAPI)
 	handler.HandleFunc("/login", api.LoginAPI)
 

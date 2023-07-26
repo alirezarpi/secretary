@@ -11,11 +11,11 @@ import (
 
 type AsksFor struct {
 	UUID         string
-	What		 string
-	Reason		 string
-	Status		 string
-	Requester	 string
-	Reviewer	 string
+	What         string
+	Reason       string
+	Status       string
+	Requester    string
+	Reviewer     string
 	CreatedTime  string
 	ModifiedTime string
 }
@@ -39,54 +39,21 @@ func (af *AsksFor) CreateAsksFor(what string, reason string) error {
 
 func (af *AsksFor) GetAsksFor(uuid string) *AsksFor {
 	query := fmt.Sprintf(`SELECT * FROM asks_for WHERE uuid='%s'`, uuid[0])
-
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
-		log.Fatal("Error in GetAsk: ", err)
-		return []map[string]interface{}{}
-	}
-	defer rows.Close()
-
-	columns, err := rows.Columns()
-	if err != nil {
-		log.Fatal("Error in GetAsk: ", err)
-		return []map[string]interface{}{}
-	}
-
-	results, err := utils.HandleTableToJSON(columns, rows)
-	if err != nil {
-		log.Fatal("Error in GetAsk: ", err)
-		return []map[string]interface{}{}
+		log.Fatal("Error in GetAsksFor: ", err)
+		return nil
 	}
 
 	return results
 }
 
-func (af *AsksFor) GetAsksFors() *AsksFor {
-	var query string
-	if len(uuid) > 0 {
-		query = fmt.Sprintf(`SELECT * FROM asks_for WHERE uuid='%s'`, uuid[0])
-	} else {
-		query = `SELECT * FROM asks_for`
-	}
-
+func (af *AsksFor) GetAllAsksFors() *AsksFor {
+	query = `SELECT * FROM asks_for`
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
-		log.Fatal("Error in GetAsk: ", err)
-		return []map[string]interface{}{}
-	}
-	defer rows.Close()
-
-	columns, err := rows.Columns()
-	if err != nil {
-		log.Fatal("Error in GetAsk: ", err)
-		return []map[string]interface{}{}
-	}
-
-	results, err := utils.HandleTableToJSON(columns, rows)
-	if err != nil {
-		log.Fatal("Error in GetAsk: ", err)
-		return []map[string]interface{}{}
+		log.Fatal("Error in GetAllAskFor: ", err)
+		return nil
 	}
 
 	return results

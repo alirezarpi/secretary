@@ -35,7 +35,7 @@ func UserAPI(w http.ResponseWriter, r *http.Request) {
 			queryParam := r.URL.Query().Get("username")
 			if queryParam == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"user_data": user.GetUsers(),
+					"user_data": user.GetAllUsers(),
 				})
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{

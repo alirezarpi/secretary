@@ -103,7 +103,7 @@ func (u *User) GetUser(username string) *User {
 	}
 }
 
-func (u *User) GetUsers() []*User {
+func (u *User) GetAllUsers() []*User {
 	query := `SELECT * FROM local_user`
 
 	rows, err := storage.DatabaseQuery(query)
