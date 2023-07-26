@@ -41,6 +41,7 @@ func (u *User) CreateUser(username string, password string, active bool) error {
 	}
 
 	// FIXME Add validation code here ...
+	// FIXME change the error handling
 
 	createdTime := utils.CurrentTime()
 
