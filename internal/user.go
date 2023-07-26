@@ -128,8 +128,6 @@ func (u *User) GetAllUsers() []*User {
 
 	users := make([]*User, 0, len(results))
 	for _, res := range results {
-		println(res["created_time"].(time.Time).Format(time.RFC3339))
-		println(res["modified_time"].(time.Time).Format(time.RFC3339))
 		user := &User{
 			UUID:         res["uuid"].(string),
 			Username:     res["username"].(string),
