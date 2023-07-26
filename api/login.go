@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/sessions"
 
-	"secretary/alpha/utils"
 	"secretary/alpha/internal"
+	"secretary/alpha/utils"
 )
 
 func LoginAPI(w http.ResponseWriter, r *http.Request) {

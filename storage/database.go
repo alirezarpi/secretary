@@ -28,7 +28,9 @@ func DatabaseInit() bool {
 		created_time DATETIME NOT NULL,
 		modified_time DATETIME NOT NULL,
 		reason TEXT NOT NULL,
-		status TEXT NOT NULL
+		status TEXT NOT NULL,
+		requester TEXT NOT NULL,
+		reviewer TEXT NOT NULL
 	);`, table)
 
 	_, err := db.Exec(query)

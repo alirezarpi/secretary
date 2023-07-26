@@ -13,9 +13,11 @@ func CreateAsk(what string, reason string) bool {
 	uuid := utils.UUID()
 	createdTime := utils.CurrentTime()
 	status := constants.ASK_PENDING
+	requester := "placeholder"
+	reviewer := "placeholder"
 
 	query := fmt.Sprintf(`INSERT INTO asks_for (uuid, what, created_time, modified_time, reason, status)
-		VALUES ('%s', '%s', '%s', '%s', '%s', '%s')`, uuid, what, createdTime, createdTime, reason, status)
+		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')`, uuid, what, createdTime, createdTime, reason, status, requester, reviewer)
 
 	log.Printf("Asking query: %s", query)
 
