@@ -4,7 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gorilla/sessions"
+
+	"secretary/alpha/internal"
 )
+
+var store = sessions.NewCookieStore([]byte("my_secret_key"))
 
 func setHeaders(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
@@ -12,10 +16,13 @@ func setHeaders(w http.ResponseWriter) {
 
 func isAuthenticated(r *http.Request) interface{} {
 	// FIXME change the secret
-	var store = sessions.NewCookieStore([]byte("my_secret_key"))
 	session, _ := store.Get(r, "session.id")
 	authenticated := session.Values["authenticated"]
 	return authenticated
+}
+
+func AuthenticatedUser() *internal.User {
+	return internal.GetUser(session.Values["username"])
 }
 
 func Middleware(w http.ResponseWriter, r *http.Request, secure ...bool) bool {
