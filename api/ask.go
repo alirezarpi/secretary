@@ -10,6 +10,7 @@ import (
 
 func AskAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
+		asksFor := &internal.AsksFor{}
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
@@ -18,17 +19,17 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 			}
 			// FIXME Validators needed
 			Responser(w, r, true, 200, map[string]interface{}{
-				"ask_data": internal.CreateAsk(reqBody["what"].(string), reqBody["reason"].(string)),
+				"ask_data": asksFor.CreateAsksFor(reqBody["what"].(string), reqBody["reason"].(string)),
 			})
 		case "GET":
 			queryParam := r.URL.Query().Get("uuid")
 			if queryParam == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"ask_data": internal.GetAllAsksFors(),
+					"ask_data": asksFor.GetAllAsksFors(),
 				})
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"ask_data": internal.GetAsksFor(queryParam),
+					"ask_data": asksFor.GetAsksFor(queryParam),
 				})
 			}
 		default:
