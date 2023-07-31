@@ -14,15 +14,12 @@ func setHeaders(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func isAuthenticated(r *http.Request) interface{} {
+func isAuthenticated(r *http.Request) (interface{}, *internal.User) {
 	// FIXME change the secret
+	user := internal.User{}
 	session, _ := store.Get(r, "session.id")
 	authenticated := session.Values["authenticated"]
-	return authenticated
-}
-
-func AuthenticatedUser() *internal.User {
-	return internal.GetUser(session.Values["username"])
+	return authenticated, user.GetUser(session.Values["username"].(string))
 }
 
 func Middleware(w http.ResponseWriter, r *http.Request, secure ...bool) bool {
@@ -31,7 +28,7 @@ func Middleware(w http.ResponseWriter, r *http.Request, secure ...bool) bool {
 		return true
 	}
 
-	authenticated := isAuthenticated(r)
+	authenticated, _ := isAuthenticated(r)
 	if (authenticated != nil) && (authenticated != false) {
 		setHeaders(w)
 		return true
