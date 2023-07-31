@@ -1,4 +1,4 @@
-# Secretary Project
+# Secretary Project gosecretary.org
 
 ## Just to be aware: this project is still in learning process, it can easily be targeted via SQL-injection.
 
