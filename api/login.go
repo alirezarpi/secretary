@@ -25,9 +25,8 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-
-	user := &internal.User{}
-	retrievedUser := user.GetUser(reqBody["username"].(string))
+	retrievedUser := &internal.User{}
+	retrievedUser = retrievedUser.GetUser(reqBody["username"].(string))
 	if retrievedUser == nil {
 		Responser(w, r, false, 401, map[string]interface{}{
 			"message": "Unauthorized",
@@ -36,7 +35,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	if retrievedUser.CheckPassword(reqBody["password"].(string)) {
 		session, _ := store.Get(r, "session.id")
 		session.Values["authenticated"] = true
-		session.Values["username"] = reqBody["username"]
+		session.Values["username"] = retrievedUser
 		store.MaxAge(86400 * 3)
 		session.Save(r, w)
 		Responser(w, r, true, 200, map[string]interface{}{

@@ -47,7 +47,7 @@ func HandleTableToJSON(columns []string, rows *sql.Rows) ([]map[string]interface
 		}
 
 		results = append(results, row)
+		return results, nil
 	}
-
 	return results, nil
 }

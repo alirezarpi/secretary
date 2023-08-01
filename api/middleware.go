@@ -18,8 +18,7 @@ func isAuthenticated(r *http.Request) (interface{}, *internal.User) {
 	// FIXME change the secret
 	user := internal.User{}
 	session, _ := store.Get(r, "session.id")
-	authenticated := session.Values["authenticated"]
-	return authenticated, user.GetUser(session.Values["username"].(string))
+	return session.Values["authenticated"], user.GetUser(session.Values["username"].(string))
 }
 
 func Middleware(w http.ResponseWriter, r *http.Request, secure ...bool) bool {

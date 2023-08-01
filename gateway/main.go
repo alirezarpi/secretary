@@ -19,10 +19,14 @@ func main() {
 	var handler = http.NewServeMux()
 
 	handler.HandleFunc("/", api.HomeAPI)
+	
 	handler.HandleFunc("/hz", api.HealthCheckAPI)
+	
 	handler.HandleFunc("/askfor", api.AskAPI)
+
 	handler.HandleFunc("/user", api.UserAPI)
-	handler.HandleFunc("/login", api.LoginAPI)
+	handler.HandleFunc("/user/self", api.SelfAPI)
+	handler.HandleFunc("/user/login", api.LoginAPI)
 
 	var server = &http.Server{
 		Addr:    *listenAddr,
