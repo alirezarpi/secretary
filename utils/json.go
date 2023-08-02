@@ -28,6 +28,7 @@ func HandleReqJson(r *http.Request) (map[string]interface{}, error) {
 func HandleTableToJSON(columns []string, rows *sql.Rows) ([]map[string]interface{}, error) {
 	var results []map[string]interface{} = []map[string]interface{}{}
 	for rows.Next() {
+		println("fdsfsdfsdfsdfsdfs")
 		row := make(map[string]interface{})
 		values := make([]interface{}, len(columns))
 		columnPointers := make([]interface{}, len(columns))
@@ -49,5 +50,5 @@ func HandleTableToJSON(columns []string, rows *sql.Rows) ([]map[string]interface
 		results = append(results, row)
 		return results, nil
 	}
-	return results, nil
+	return make([]map[string]interface{}, 0), nil
 }

@@ -20,7 +20,6 @@ func Responser(w http.ResponseWriter, r *http.Request, status bool, statusCode i
 		Data:   response,
 	}
 
-	Middleware(w, r)
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(resp)
 }
