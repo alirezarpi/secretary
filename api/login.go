@@ -30,7 +30,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	retrievedUser = retrievedUser.GetUser(reqBody["username"].(string))
 	if retrievedUser == nil {
 		Responser(w, r, false, 401, map[string]interface{}{
-			"message": "Unauthorized",
+			"message": "unathorized",
 		})
 		return
 	}
@@ -46,7 +46,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{
-			"message": "Unauthorized",
+			"message": "unathorized",
 		})
 		return
 	}

@@ -43,7 +43,7 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{
-			"error": "Unauthorized",
+			"error": "unathorized",
 		})
 		return
 	}
