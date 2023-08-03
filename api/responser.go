@@ -2,8 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
-	"reflect"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -23,7 +21,5 @@ func Responser(w http.ResponseWriter, r *http.Request, status bool, statusCode i
 	}
 
 	w.WriteHeader(statusCode)
-	fmt.Println(reflect.TypeOf(resp).Kind())
-	fmt.Println(reflect.TypeOf(resp.Data["message"]).Kind())
 	json.NewEncoder(w).Encode(resp)
 }

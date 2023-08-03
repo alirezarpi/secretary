@@ -29,13 +29,11 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	retrievedUser := &internal.User{}
 	retrievedUser = retrievedUser.GetUser(reqBody["username"].(string))
 	if retrievedUser == nil {
-		println("psspss")
 		Responser(w, r, false, 401, map[string]interface{}{
 			"message": "Unauthorized",
 		})
 		return
 	}
-	println("fdsfsdfsfdsfs")
 	if retrievedUser.CheckPassword(reqBody["password"].(string)) {
 		session, _ := store.Get(r, "session.id")
 		session.Values["authenticated"] = true
