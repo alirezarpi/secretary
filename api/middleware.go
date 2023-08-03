@@ -8,6 +8,7 @@ import (
 	"secretary/alpha/internal"
 )
 
+// FIXME change the secret
 var store = sessions.NewCookieStore([]byte("my_secret_key"))
 
 func setHeaders(w http.ResponseWriter) {
@@ -15,9 +16,11 @@ func setHeaders(w http.ResponseWriter) {
 }
 
 func isAuthenticated(r *http.Request) (interface{}, *internal.User) {
-	// FIXME change the secret
 	user := internal.User{}
 	session, _ := store.Get(r, "session.id")
+	if (len(session.Values) == 0) {
+		return false, nil
+	}
 	return session.Values["authenticated"], user.GetUser(session.Values["username"].(string))
 }
 

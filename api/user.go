@@ -10,7 +10,7 @@ import (
 )
 
 func UserAPI(w http.ResponseWriter, r *http.Request) {
-	if Middleware(w, r) {
+	if Middleware(w, r, false) {
 		user := &internal.User{}
 		switch r.Method {
 		case "POST":

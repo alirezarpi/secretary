@@ -37,8 +37,8 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	if retrievedUser.CheckPassword(reqBody["password"].(string)) {
 		session, _ := store.Get(r, "session.id")
 		session.Values["authenticated"] = true
-		session.Values["username"] = retrievedUser
-		store.MaxAge(86400 * 3)
+		session.Values["username"] = reqBody["username"]
+		store.MaxAge(2592000)
 		session.Save(r, w)
 		Responser(w, r, true, 200, map[string]interface{}{
 			"message": "login successfully",
