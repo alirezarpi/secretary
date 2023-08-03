@@ -17,6 +17,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		Responser(w, r, false, 405, map[string]interface{}{
 			"message": "method not allowed",
 		})
+		return
 	}
 
 	// FIXME use ENV for secretkey
@@ -28,10 +29,13 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	retrievedUser := &internal.User{}
 	retrievedUser = retrievedUser.GetUser(reqBody["username"].(string))
 	if retrievedUser == nil {
+		println("psspss")
 		Responser(w, r, false, 401, map[string]interface{}{
 			"message": "Unauthorized",
 		})
+		return
 	}
+	println("fdsfsdfsfdsfs")
 	if retrievedUser.CheckPassword(reqBody["password"].(string)) {
 		session, _ := store.Get(r, "session.id")
 		session.Values["authenticated"] = true
@@ -41,9 +45,11 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		Responser(w, r, true, 200, map[string]interface{}{
 			"message": "login successfully",
 		})
+		return
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{
 			"message": "Unauthorized",
 		})
+		return
 	}
 }

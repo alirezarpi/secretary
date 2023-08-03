@@ -15,4 +15,5 @@ func HomeAPI(w http.ResponseWriter, r *http.Request) {
 	Responser(w, r, true, 200, map[string]interface{}{
 		"message": "Secretary is here ^^",
 	})
+	return
 }

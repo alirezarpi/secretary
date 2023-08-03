@@ -15,4 +15,5 @@ func HealthCheckAPI(w http.ResponseWriter, r *http.Request) {
 			"success": storage.DatabaseHealthCheck(),
 		},
 	})
+	return
 }

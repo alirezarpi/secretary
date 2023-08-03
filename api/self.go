@@ -12,6 +12,7 @@ func SelfAPI(w http.ResponseWriter, r *http.Request) {
 			Responser(w, r, false, 405, map[string]interface{}{
 				"error": "method not allowed",
 			})
+			return
 		}
 
 		user := &internal.User{}
@@ -19,9 +20,11 @@ func SelfAPI(w http.ResponseWriter, r *http.Request) {
 		Responser(w, r, true, 200, map[string]interface{}{
 			"user_data": user,
 		})
+		return
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{
 			"error": "Unauthorized",
 		})
+		return
 	}
 }
