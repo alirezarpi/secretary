@@ -22,7 +22,7 @@ func main() {
 	
 	handler.HandleFunc("/hz", api.HealthCheckAPI)
 	
-	handler.HandleFunc("/askfor", api.AskAPI)
+	handler.HandleFunc("/asksfor", api.AskAPI)
 
 	handler.HandleFunc("/user", api.UserAPI)
 	handler.HandleFunc("/user/self", api.SelfAPI)

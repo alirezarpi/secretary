@@ -1,11 +1,10 @@
 package api
 
 import (
-	"log"
 	"net/http"
 
-	"secretary/alpha/internal"
 	"secretary/alpha/utils"
+	"secretary/alpha/internal"
 )
 
 func AskAPI(w http.ResponseWriter, r *http.Request) {
@@ -15,12 +14,19 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
 			if err != nil {
-				log.Println(err)
+				utils.ErrorLogger(err)
 			}
-			// FIXME Validators needed
+
+			user := &internal.User{}
+			_, user = isAuthenticated(r)
+			// FIXME Validators needed, data and also check if reviewer is valid user
 			Responser(w, r, true, 200, map[string]interface{}{
-				"ask_data": asksFor.CreateAsksFor(reqBody["what"].(string), reqBody["reason"].(string)),
-			})
+				"ask_data": asksFor.CreateAsksFor(
+					reqBody["what"].(string),
+					reqBody["reason"].(string),
+					user.Username,
+					reqBody["reviewer"].(string),
+				)})
 			return
 		case "GET":
 			queryParam := r.URL.Query().Get("uuid")

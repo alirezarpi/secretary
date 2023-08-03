@@ -21,12 +21,10 @@ type AsksFor struct {
 	ModifiedTime string
 }
 
-func (af *AsksFor) CreateAsksFor(what string, reason string) error {
+func (af *AsksFor) CreateAsksFor(what string, reason string, requester string, reviewer string) error {
 	uuid := utils.UUID()
 	createdTime := utils.CurrentTime()
 	status := constants.ASK_PENDING
-	requester := "placeholder"
-	reviewer := "placeholder"
 
 	query := `INSERT INTO asks_for (uuid, what, created_time, modified_time, reason, status, requester, reviewer)
 		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')`
