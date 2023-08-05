@@ -2,7 +2,8 @@ package storage
 
 import (
 	"database/sql"
-	"log"
+
+	"secretary/alpha/utils"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -12,7 +13,7 @@ func DatabaseQuery(query string) (*sql.Rows, error) {
 
 	rows, err := db.Query(query)
 	if err != nil {
-		log.Fatal(err, ": ", query)
+		utils.Logger("err", err.Error())
 		return nil, err
 	}
 	defer db.Close()
@@ -27,12 +28,8 @@ func DatabaseExec(query string, args ...interface{}) (*sql.Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	rowCount, err := result.RowsAffected()
-	if err != nil {
-		return nil, err
-	}
 	defer db.Close()
 
-	log.Println("DatabaseExec, Rows Affected:", rowCount, " - Query:", query)
+	utils.Logger("info", "query done: " + query)
 	return &result, nil
 }

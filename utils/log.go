@@ -17,6 +17,8 @@ func Logger(logLevel string, message string) {
 		log.Printf("[INFO] %s:%d - %s\n", file, line, message)
 	case "err":
 		log.Printf("[ERROR] %s:%d - %s\n", file, line, message)
+	case "fatal":
+		log.Fatalf("[FATAL] %s:%d - %s\n", file, line, message)	
 	}
 }
 

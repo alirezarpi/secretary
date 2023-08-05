@@ -30,7 +30,6 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 				reqBody["reviewer"].(string),
 			)
 			if (err != nil) {
-				println("fdfdsfs")
 				Responser(w, r, false, 500, map[string]interface{}{
 					"error": "internal error",
 				})
@@ -40,6 +39,8 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 				"ask_data": "asksfor created successfully",
 			})
 			return
+		case "PATCH":
+			utils.Logger("info", "Requesting for patch the asksfor")
 		case "GET":
 			queryParam := r.URL.Query().Get("uuid")
 			if queryParam == "" {

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"secretary/alpha/utils"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -11,7 +12,7 @@ import (
 func OpenDatabase() *sql.DB {
 	db, err := sql.Open("sqlite3", "./storage/secretary.db")
 	if err != nil {
-		log.Fatal(err)
+		utils.Logger("fatal", err.Error())
 		return nil
 	}
 	return db
@@ -35,7 +36,7 @@ func DatabaseInit() bool {
 
 	_, err := db.Exec(query)
 	if err != nil {
-		log.Fatal("Error in DatabaseInit table ", table, " : ", err)
+		utils.Logger("fatal", err.Error())
 		return false
 	}
 
@@ -52,7 +53,7 @@ func DatabaseInit() bool {
 
 	_, err = db.Exec(query)
 	if err != nil {
-		log.Fatal(err)
+		utils.Logger("fatal", err.Error())
 		return false
 	}
 
