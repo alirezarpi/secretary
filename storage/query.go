@@ -25,12 +25,10 @@ func DatabaseExec(query string, args ...interface{}) (*sql.Result, error) {
 
 	result, err := db.Exec(query, args...)
 	if err != nil {
-		log.Fatal(err, ": ", query)
 		return nil, err
 	}
 	rowCount, err := result.RowsAffected()
 	if err != nil {
-		log.Fatal(err, ": ", query)
 		return nil, err
 	}
 	defer db.Close()

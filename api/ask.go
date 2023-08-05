@@ -16,21 +16,29 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				utils.Logger("err", err.Error())
 				Responser(w, r, false, 400, map[string]interface{}{
-					"message": "invalid data",
+					"error": "invalid data",
 				})
 				return
 			}
 
 			user := &internal.User{}
 			_, user = isAuthenticated(r)
-			// FIXME Validators needed, data and also check if reviewer is valid user
-			Responser(w, r, true, 200, map[string]interface{}{
-				"ask_data": asksFor.CreateAsksFor(
-					reqBody["what"].(string),
-					reqBody["reason"].(string),
-					user.Username,
-					reqBody["reviewer"].(string),
-				)})
+			err = asksFor.CreateAsksFor(
+				reqBody["what"].(string),
+				reqBody["reason"].(string),
+				user.Username,
+				reqBody["reviewer"].(string),
+			)
+			if (err != nil) {
+				println("fdfdsfs")
+				Responser(w, r, false, 500, map[string]interface{}{
+					"error": "internal error",
+				})
+				return
+			}
+			Responser(w, r, true, 201, map[string]interface{}{
+				"ask_data": "asksfor created successfully",
+			})
 			return
 		case "GET":
 			queryParam := r.URL.Query().Get("uuid")

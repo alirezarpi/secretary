@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"secretary/alpha/internal/constants"
@@ -22,19 +21,21 @@ type AsksFor struct {
 }
 
 func (af *AsksFor) CreateAsksFor(what string, reason string, requester string, reviewer string) error {
-	uuid := utils.UUID()
-	createdTime := utils.CurrentTime()
-	status := constants.ASK_PENDING
+	af.UUID = utils.UUID()
+	af.CreatedTime = utils.CurrentTime()
+	af.Status = constants.ASK_PENDING
+	af.Reason = reason
+	af.Reviewer = reviewer
+	af.Requester = requester
 
+	//FIXME validate data
 	query := `INSERT INTO asks_for (uuid, what, created_time, modified_time, reason, status, requester, reviewer)
-		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')`
-
-	_, err := storage.DatabaseExec(query, uuid, what, createdTime, createdTime, reason, status, requester, reviewer)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+	_, err := storage.DatabaseExec(query, af.UUID, af.What, af.CreatedTime, af.CreatedTime, af.Reason, af.Status, af.Requester, af.Reviewer)
 	if err != nil {
-		log.Fatal("Error in CreateAsksFor: ", err)
+		utils.Logger("err", err.Error())
 		return err
 	}
-
 	return nil
 }
 
@@ -42,20 +43,20 @@ func (af *AsksFor) GetAsksFor(uuid string) *AsksFor {
 	query := fmt.Sprintf(`SELECT * FROM asks_for WHERE uuid='%s'`, uuid)
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
-		log.Fatal("Error in GetAsksFor: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {
-		log.Fatal("Error in GetAsksFor: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 
 	results, err := utils.HandleTableToJSON(columns, rows)
 	if err != nil {
-		log.Fatal("Error in GetAsksFor: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 
@@ -79,20 +80,20 @@ func (af *AsksFor) GetAllAsksFors() []*AsksFor {
 	query := `SELECT * FROM asks_for`
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
-		log.Fatal("Error in GetAllAskFor: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {
-		log.Fatal("Error in GetAllAsksFors: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 
 	results, err := utils.HandleTableToJSON(columns, rows)
 	if err != nil {
-		log.Fatal("Error in GetAllAsksFors: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 
