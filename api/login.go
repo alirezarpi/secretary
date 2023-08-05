@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -24,7 +23,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("my_secret_key"))
 	reqBody, err := utils.HandleReqJson(r)
 	if err != nil {
-		log.Println(err)
+		utils.Logger("err", err.Error())
 	}
 	retrievedUser := &internal.User{}
 	retrievedUser = retrievedUser.GetUser(reqBody["username"].(string))
@@ -38,7 +37,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "session.id")
 		session.Values["authenticated"] = true
 		session.Values["username"] = reqBody["username"]
-		store.MaxAge(2592000)
+		store.MaxAge(28800)
 		session.Save(r, w)
 		Responser(w, r, true, 200, map[string]interface{}{
 			"message": "login successfully",

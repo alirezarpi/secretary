@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -37,7 +36,7 @@ func HandleTableToJSON(columns []string, rows *sql.Rows) ([]map[string]interface
 
 		err := rows.Scan(columnPointers...)
 		if err != nil {
-			log.Fatal("Error in internal.GetAllAsk: ", err)
+			Logger("err", err.Error())
 			return []map[string]interface{}{}, err
 		}
 

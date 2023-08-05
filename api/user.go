@@ -1,8 +1,6 @@
 package api
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	"secretary/alpha/internal"
@@ -16,7 +14,6 @@ func UserAPI(w http.ResponseWriter, r *http.Request) {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
 			if err != nil {
-				log.Println(err)
 				Responser(w, r, false, 400, map[string]interface{}{
 					"error": "invalid data",
 				})
@@ -24,9 +21,9 @@ func UserAPI(w http.ResponseWriter, r *http.Request) {
 			}
 			err = user.CreateUser(reqBody["username"].(string), reqBody["password"].(string), reqBody["active"].(bool))
 			if err != nil {
-				http.Error(w, fmt.Sprintf("Error creating user: %v", err), http.StatusInternalServerError)
+				utils.Logger("err", err.Error())
 				Responser(w, r, false, 400, map[string]interface{}{
-					"error": "invalid data",
+					"error": err.Error(),
 				})
 				return
 			}

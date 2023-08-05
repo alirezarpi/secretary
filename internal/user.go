@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -37,7 +36,7 @@ func (u *User) CheckPassword(password string) bool {
 func (u *User) CreateUser(username string, password string, active bool) error {
 	existingUser := u.GetUser(username)
 	if existingUser != nil {
-		return fmt.Errorf("username already exists")
+		return fmt.Errorf("user already exists")
 	}
 
 	// FIXME Add validation code here ...
@@ -53,7 +52,7 @@ func (u *User) CreateUser(username string, password string, active bool) error {
 
 	err := u.SetPassword(password)
 	if err != nil {
-		return fmt.Errorf("SetPassword Error: %v", err)
+		return fmt.Errorf("setpassword error: %v", err)
 	}
 
 	query := `
@@ -62,7 +61,7 @@ func (u *User) CreateUser(username string, password string, active bool) error {
 	`
 	_, err = storage.DatabaseExec(query, u.UUID, u.Username, u.PasswordHash, u.Active, u.CreatedTime, u.ModifiedTime)
 	if err != nil {
-		return fmt.Errorf("Error in CreateUser: %v", err)
+		return fmt.Errorf("error in createuser: %v", err)
 	}
 
 	return nil
@@ -73,20 +72,20 @@ func (u *User) GetUser(username string) *User {
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
-		log.Fatal("Error in GetUser: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {
-		log.Fatal("Error in GetUser: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 
 	results, err := utils.HandleTableToJSON(columns, rows)
 	if err != nil {
-		log.Fatal("Error in GetUser: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 
@@ -109,20 +108,20 @@ func (u *User) GetAllUsers() []*User {
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
-		log.Fatal("Error in GetUsers: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {
-		log.Fatal("Error in GetUsers: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 
 	results, err := utils.HandleTableToJSON(columns, rows)
 	if err != nil {
-		log.Fatal("Error in GetUsers: ", err)
+		utils.Logger("err", err.Error())
 		return nil
 	}
 

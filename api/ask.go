@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	"secretary/alpha/utils"
 	"secretary/alpha/internal"
+	"secretary/alpha/utils"
 )
 
 func AskAPI(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +14,11 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
 			if err != nil {
-				utils.ErrorLogger(err)
+				utils.Logger("err", err.Error())
+				Responser(w, r, false, 400, map[string]interface{}{
+					"message": "invalid data",
+				})
+				return
 			}
 
 			user := &internal.User{}
