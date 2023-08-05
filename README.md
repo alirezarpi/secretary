@@ -4,3 +4,6 @@
 
 ### Yet no security hardening is applied against this repo.
 
+### Todo List
+- Validations
+
