@@ -33,12 +33,12 @@ func DatabaseInit() bool {
 		CREATE TABLE IF NOT EXISTS %s (
 			uuid TEXT NOT NULL PRIMARY KEY,
 			what TEXT NOT NULL,
-			created_time DATETIME NOT NULL,
-			modified_time DATETIME NOT NULL,
 			reason TEXT NOT NULL,
 			status TEXT NOT NULL,
 			requester TEXT NOT NULL,
-			reviewer TEXT NOT NULL
+			reviewer TEXT NOT NULL,
+			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		);`, table)
 	_, err := db.Exec(query)
 	if err != nil {
