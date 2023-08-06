@@ -28,7 +28,7 @@ func DatabaseInit() bool {
 	db := OpenDatabase()
 
 	// ASKSFOR Tables
-	table := "asks_for"
+	table := "asksfor"
 	query := fmt.Sprintf(`
 		CREATE TABLE IF NOT EXISTS %s (
 			uuid TEXT NOT NULL PRIMARY KEY,
