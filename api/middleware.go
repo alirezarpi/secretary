@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/sessions"
 
 	"secretary/alpha/internal"
+	"secretary/alpha/utils"
 )
 
 // FIXME change the secret
@@ -17,8 +18,12 @@ func setHeaders(w http.ResponseWriter) {
 
 func isAuthenticated(r *http.Request) (interface{}, *internal.User) {
 	user := internal.User{}
-	session, _ := store.Get(r, "session.id")
-	if (len(session.Values) == 0) {
+	session, err := store.Get(r, "session.id")
+	if (err != nil) {
+		utils.Logger("err", err.Error())
+		return false, nil
+	} 
+	if (len(session.Values) == 0) || (session.Values["username"] == nil) {
 		return false, nil
 	}
 	return session.Values["authenticated"], user.GetUser(session.Values["username"].(string))
