@@ -15,7 +15,7 @@ func main() {
 	flag.Parse()
 
 	storage.DatabaseInit()
-	storage.RunFixtures()
+	internal.RunFixtures()
 
 	internal.ShowBanner("./banner.txt")
 
