@@ -9,6 +9,7 @@ func adminFixture() error {
 	err := admin.CreateUser(username, password, true)
 	if err != nil {
 		utils.Logger("warn", err.Error())
+		return nil
 	}
 	utils.Logger("info", "admin user successfully initiated")
 	utils.Logger("info", "------------------------------------------")
