@@ -13,15 +13,18 @@ import (
 func main() {
 	var listenAddr = flag.String("listenaddr", "0.0.0.0:6080", "secretary server address")
 	flag.Parse()
+
 	storage.DatabaseInit()
+	storage.RunFixtures()
+
 	internal.ShowBanner("./banner.txt")
 
 	var handler = http.NewServeMux()
 
 	handler.HandleFunc("/", api.HomeAPI)
-	
+
 	handler.HandleFunc("/hz", api.HealthCheckAPI)
-	
+
 	handler.HandleFunc("/asksfor", api.AskAPI)
 
 	handler.HandleFunc("/resource", api.ResourceAPI)

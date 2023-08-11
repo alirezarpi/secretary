@@ -19,10 +19,10 @@ func setHeaders(w http.ResponseWriter) {
 func isAuthenticated(r *http.Request) (interface{}, *internal.User) {
 	user := internal.User{}
 	session, err := store.Get(r, "session.id")
-	if (err != nil) {
+	if err != nil {
 		utils.Logger("err", err.Error())
 		return false, nil
-	} 
+	}
 	if (len(session.Values) == 0) || (session.Values["username"] == nil) {
 		return false, nil
 	}

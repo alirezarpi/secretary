@@ -65,14 +65,14 @@ func (af *AsksFor) GetAsksFor(uuid string) *AsksFor {
 	}
 
 	return &AsksFor{
-		UUID:			results[0]["uuid"].(string),
-		What:			results[0]["what"].(string),
-		Reason:			results[0]["reason"].(string),
-		Status:			results[0]["status"].(string),
-		Requester:      results[0]["requester"].(string),
-		Reviewer:       results[0]["reviewer"].(string),
-		CreatedTime:	results[0]["created_time"].(time.Time).Format(time.RFC3339),
-		ModifiedTime:	results[0]["modified_time"].(time.Time).Format(time.RFC3339),
+		UUID:         results[0]["uuid"].(string),
+		What:         results[0]["what"].(string),
+		Reason:       results[0]["reason"].(string),
+		Status:       results[0]["status"].(string),
+		Requester:    results[0]["requester"].(string),
+		Reviewer:     results[0]["reviewer"].(string),
+		CreatedTime:  results[0]["created_time"].(time.Time).Format(time.RFC3339),
+		ModifiedTime: results[0]["modified_time"].(time.Time).Format(time.RFC3339),
 	}
 }
 
@@ -97,18 +97,17 @@ func (af *AsksFor) GetAllAsksFors() []*AsksFor {
 		return nil
 	}
 
-
 	asksFors := make([]*AsksFor, 0, len(results))
 	for _, res := range results {
 		asksFor := &AsksFor{
-			UUID:			res["uuid"].(string),
-			What:			res["what"].(string),
-			Reason:			res["reason"].(string),
-			Status:			res["status"].(string),
-			Requester:      res["requester"].(string),
-			Reviewer:       res["reviewer"].(string),
-			CreatedTime:	res["created_time"].(time.Time).Format(time.RFC3339),
-			ModifiedTime:	res["modified_time"].(time.Time).Format(time.RFC3339),
+			UUID:         res["uuid"].(string),
+			What:         res["what"].(string),
+			Reason:       res["reason"].(string),
+			Status:       res["status"].(string),
+			Requester:    res["requester"].(string),
+			Reviewer:     res["reviewer"].(string),
+			CreatedTime:  res["created_time"].(time.Time).Format(time.RFC3339),
+			ModifiedTime: res["modified_time"].(time.Time).Format(time.RFC3339),
 		}
 		asksFors = append(asksFors, asksFor)
 	}

@@ -30,6 +30,6 @@ func DatabaseExec(query string, args ...interface{}) (*sql.Result, error) {
 	}
 	defer db.Close()
 
-	utils.Logger("info", "query done: " + query)
+	utils.Logger("info", "query done: "+query)
 	return &result, nil
 }

@@ -29,7 +29,7 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 				user.Username,
 				reqBody["reviewer"].(string),
 			)
-			if (err != nil) {
+			if err != nil {
 				Responser(w, r, false, 500, map[string]interface{}{
 					"error": "internal error",
 				})

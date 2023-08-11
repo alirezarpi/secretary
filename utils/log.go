@@ -15,10 +15,11 @@ func Logger(logLevel string, message string) {
 	switch logLevel {
 	case "info":
 		log.Printf("[INFO] %s:%d - %s\n", file, line, message)
+	case "warn":
+		log.Printf("[WARN] %s:%d - %s\n", file, line, message)
 	case "err":
 		log.Printf("[ERROR] %s:%d - %s\n", file, line, message)
 	case "fatal":
-		log.Fatalf("[FATAL] %s:%d - %s\n", file, line, message)	
+		log.Fatalf("[FATAL] %s:%d - %s\n", file, line, message)
 	}
 }
-

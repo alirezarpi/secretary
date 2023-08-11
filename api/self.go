@@ -8,7 +8,7 @@ import (
 
 func SelfAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
-		if (r.Method != "GET") {
+		if r.Method != "GET" {
 			Responser(w, r, false, 405, map[string]interface{}{
 				"error": "method not allowed",
 			})

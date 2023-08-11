@@ -3,12 +3,11 @@ package storage
 import (
 	"database/sql"
 	"fmt"
-	"log"
+
 	"secretary/alpha/utils"
 
 	_ "github.com/mattn/go-sqlite3"
 )
-
 
 // FIXME add table names
 //const {
@@ -131,6 +130,6 @@ func DatabaseInit() bool {
 		return false
 	}
 
-	log.Println("Database successfully initiated")
+	utils.Logger("info", "Database successfully initiated")
 	return true
 }

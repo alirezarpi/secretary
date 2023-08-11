@@ -10,7 +10,7 @@ import (
 
 type Resource struct {
 	UUID         string
-	Name	     string
+	Name         string
 	Active       bool
 	CreatedTime  string
 	ModifiedTime string
@@ -72,11 +72,11 @@ func (r *Resource) GetResource(name string) *Resource {
 	}
 
 	return &Resource{
-		UUID:			results[0]["uuid"].(string),
-		Name:			results[0]["name"].(string),
-		Active:			results[0]["active"].(bool),
-		CreatedTime:	results[0]["created_time"].(time.Time).Format(time.RFC3339),
-		ModifiedTime:	results[0]["modified_time"].(time.Time).Format(time.RFC3339),
+		UUID:         results[0]["uuid"].(string),
+		Name:         results[0]["name"].(string),
+		Active:       results[0]["active"].(bool),
+		CreatedTime:  results[0]["created_time"].(time.Time).Format(time.RFC3339),
+		ModifiedTime: results[0]["modified_time"].(time.Time).Format(time.RFC3339),
 	}
 }
 
@@ -105,11 +105,11 @@ func (r *Resource) GetAllResources() []*Resource {
 	resources := make([]*Resource, 0, len(results))
 	for _, res := range results {
 		resource := &Resource{
-			UUID:			res["uuid"].(string),
-			Name:			res["name"].(string),
-			Active:			res["active"].(bool),
-			CreatedTime:	res["created_time"].(time.Time).Format(time.RFC3339),
-			ModifiedTime:	res["modified_time"].(time.Time).Format(time.RFC3339),
+			UUID:         res["uuid"].(string),
+			Name:         res["name"].(string),
+			Active:       res["active"].(bool),
+			CreatedTime:  res["created_time"].(time.Time).Format(time.RFC3339),
+			ModifiedTime: res["modified_time"].(time.Time).Format(time.RFC3339),
 		}
 		resources = append(resources, resource)
 	}

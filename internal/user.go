@@ -36,7 +36,7 @@ func (u *User) CheckPassword(password string) bool {
 func (u *User) CreateUser(username string, password string, active bool) error {
 	existingUser := u.GetUser(username)
 	if existingUser != nil {
-		return fmt.Errorf("user already exists")
+		return fmt.Errorf("username %v already exists", username)
 	}
 
 	// FIXME Add validation code here ...

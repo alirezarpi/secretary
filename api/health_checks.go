@@ -5,7 +5,7 @@ import (
 )
 
 func HealthCheckAPI(w http.ResponseWriter, r *http.Request) {
-	if (Middleware(w, r)) {
+	if Middleware(w, r) {
 		if r.Method != "GET" {
 			Responser(w, r, false, 405, map[string]interface{}{
 				"message": "method not allowed",
@@ -17,7 +17,7 @@ func HealthCheckAPI(w http.ResponseWriter, r *http.Request) {
 				"success": true,
 			},
 			"database": map[string]interface{}{
-				"success": true,//storage.DatabaseHealthCheck(),
+				"success": true, //storage.DatabaseHealthCheck(),
 			},
 		})
 		return
