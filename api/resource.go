@@ -35,12 +35,12 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 			queryParam := r.URL.Query().Get("name")
 			if queryParam == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": user.GetAllResources(),
+					"resource_data": resource.GetAllResources(),
 				})
 				return
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": user.GetResource(queryParam),
+					"resource_data": resource.GetResource(queryParam),
 				})
 				return
 			}

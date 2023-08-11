@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
-
 	"secretary/alpha/storage"
 	"secretary/alpha/utils"
 )
@@ -39,7 +37,7 @@ func (r *Resource) CreateResource(name string, active bool) error {
 		INSERT INTO resource (uuid, name, active, created_time, modified_time)
 		VALUES (?, ?, ?, ?, ?)
 	`
-	_, err = storage.DatabaseExec(query, r.UUID, r.Name, r.Active, r.CreatedTime, r.ModifiedTime)
+	_, err := storage.DatabaseExec(query, r.UUID, r.Name, r.Active, r.CreatedTime, r.ModifiedTime)
 	if err != nil {
 		return fmt.Errorf("error in createresource: %v", err)
 	}
@@ -73,7 +71,7 @@ func (r *Resource) GetResource(name string) *Resource {
 		return nil
 	}
 
-	return &User{
+	return &Resource{
 		UUID:			results[0]["uuid"].(string),
 		Name:			results[0]["name"].(string),
 		Active:			results[0]["active"].(bool),
@@ -113,7 +111,7 @@ func (r *Resource) GetAllResources() []*Resource {
 			CreatedTime:	res["created_time"].(time.Time).Format(time.RFC3339),
 			ModifiedTime:	res["modified_time"].(time.Time).Format(time.RFC3339),
 		}
-		resources = append(resources, resouce)
+		resources = append(resources, resource)
 	}
 
 	return resources
