@@ -64,8 +64,41 @@ func DatabaseInit() bool {
 		return false
 	}
 
+	// Resource Tables
+	table = "resource"
+	query = fmt.Sprintf(`
+		CREATE TABLE IF NOT EXISTS %s (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			name TEXT NOT NULL,
+			active BOOLEAN DEFAULT TRUE,
+			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE (uuid, name)
+		);`, table)
+	_, err = db.Exec(query)
+	if err != nil {
+		utils.Logger("fatal", err.Error())
+		return false
+	}
+
 	// RBAC Tables
 	table = "rbac_role"
+	query = fmt.Sprintf(`
+		CREATE TABLE IF NOT EXISTS %s (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			name TEXT NOT NULL,
+			active BOOLEAN DEFAULT TRUE,
+			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE (uuid, name)
+		);`, table)
+	_, err = db.Exec(query)
+	if err != nil {
+		utils.Logger("fatal", err.Error())
+		return false
+	}
+
+	table = "rbac_permissions"
 	query = fmt.Sprintf(`
 		CREATE TABLE IF NOT EXISTS %s (
 			uuid TEXT NOT NULL PRIMARY KEY,
@@ -91,22 +124,6 @@ func DatabaseInit() bool {
 			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			UNIQUE (uuid)
-		);`, table)
-	_, err = db.Exec(query)
-	if err != nil {
-		utils.Logger("fatal", err.Error())
-		return false
-	}
-
-	table = "rbac_permissions"
-	query = fmt.Sprintf(`
-		CREATE TABLE IF NOT EXISTS %s (
-			uuid TEXT NOT NULL PRIMARY KEY,
-			name TEXT NOT NULL,
-			active BOOLEAN DEFAULT TRUE,
-			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			UNIQUE (uuid, name)
 		);`, table)
 	_, err = db.Exec(query)
 	if err != nil {
