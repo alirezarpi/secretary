@@ -40,7 +40,7 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 				return
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"user_data": user.GetResource(queryParam),
+					"resource_data": user.GetResource(queryParam),
 				})
 				return
 			}
