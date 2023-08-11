@@ -73,7 +73,7 @@ func DatabaseInit() bool {
 			active BOOLEAN DEFAULT TRUE,
 			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			UNIQUE (uuid)
+			UNIQUE (uuid, name)
 		);`, table)
 	_, err = db.Exec(query)
 	if err != nil {
@@ -106,7 +106,7 @@ func DatabaseInit() bool {
 			active BOOLEAN DEFAULT TRUE,
 			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			UNIQUE (uuid)
+			UNIQUE (uuid, name)
 		);`, table)
 	_, err = db.Exec(query)
 	if err != nil {
