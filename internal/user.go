@@ -56,7 +56,7 @@ func (u *User) CreateUser(username string, password string, active bool) error {
 	}
 
 	query := `
-		INSERT INTO local_user (uuid, username, password_hash, active, created_time, modified_time)
+		INSERT INTO user_local (uuid, username, password_hash, active, created_time, modified_time)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
 	_, err = storage.DatabaseExec(query, u.UUID, u.Username, u.PasswordHash, u.Active, u.CreatedTime, u.ModifiedTime)
@@ -68,7 +68,7 @@ func (u *User) CreateUser(username string, password string, active bool) error {
 }
 
 func (u *User) GetUser(username string) *User {
-	query := fmt.Sprintf(`SELECT * FROM local_user WHERE username='%s'`, username)
+	query := fmt.Sprintf(`SELECT * FROM user_local WHERE username='%s'`, username)
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
@@ -104,7 +104,7 @@ func (u *User) GetUser(username string) *User {
 }
 
 func (u *User) GetAllUsers() []*User {
-	query := `SELECT * FROM local_user`
+	query := `SELECT * FROM user_local`
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {

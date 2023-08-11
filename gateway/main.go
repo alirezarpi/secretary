@@ -24,6 +24,8 @@ func main() {
 	
 	handler.HandleFunc("/asksfor", api.AskAPI)
 
+	handler.HandleFunc("/resource", api.ResourceAPI)
+
 	handler.HandleFunc("/user", api.UserAPI)
 	handler.HandleFunc("/user/self", api.SelfAPI)
 	handler.HandleFunc("/user/login", api.LoginAPI)
