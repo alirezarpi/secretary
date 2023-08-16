@@ -32,6 +32,7 @@ func main() {
 	handler.HandleFunc("/user", api.UserAPI)
 	handler.HandleFunc("/user/self", api.SelfAPI)
 	handler.HandleFunc("/user/login", api.LoginAPI)
+	handler.HandleFunc("/user/logout", api.LogoutAPI)
 
 	var server = &http.Server{
 		Addr:    *listenAddr,

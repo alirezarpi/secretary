@@ -21,10 +21,5 @@ func HealthCheckAPI(w http.ResponseWriter, r *http.Request) {
 			},
 		})
 		return
-	} else {
-		Responser(w, r, true, 200, map[string]interface{}{
-			"message": "unauthorized",
-		})
-		return
 	}
 }

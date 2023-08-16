@@ -60,10 +60,5 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-	} else {
-		Responser(w, r, false, 401, map[string]interface{}{
-			"error": "unauthorized",
-		})
-		return
 	}
 }

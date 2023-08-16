@@ -1,11 +1,11 @@
 package api
 
 import (
+	"time"
 	"net/http"
 
-	"github.com/gorilla/sessions"
-
 	"secretary/alpha/internal"
+	"secretary/alpha/internal/constants"
 	"secretary/alpha/utils"
 )
 
@@ -19,8 +19,6 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// FIXME use ENV for secretkey
-	var store = sessions.NewCookieStore([]byte("my_secret_key"))
 	reqBody, err := utils.HandleReqJson(r)
 	if err != nil {
 		utils.Logger("err", err.Error())
@@ -34,11 +32,12 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if retrievedUser.CheckPassword(reqBody["password"].(string)) {
-		session, _ := store.Get(r, "session.id")
-		session.Values["authenticated"] = true
-		session.Values["username"] = reqBody["username"]
-		store.MaxAge(28800)
-		session.Save(r, w)
+		session, _ := store.Get(r, "sc_session_id")
+		session.Values["sc_authenticated"] = true
+		session.Values["sc_username"] = reqBody["username"]
+		session.Values["sc_time"] = time.Now().Unix()
+		session.Options.MaxAge = constants.HTTP_SC_MAXAGE
+		store.Save(r, w, session)
 		Responser(w, r, true, 200, map[string]interface{}{
 			"message": "login successfully",
 		})
