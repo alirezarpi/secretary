@@ -38,9 +38,9 @@ func isAuthenticated(r *http.Request) (interface{}, *internal.User) {
 	sessionCookieMaxSessionAge := int64(constants.HTTP_SC_MAXAGE)
 
 	if (currentTime - sessionCookieCreatedTime) > sessionCookieMaxSessionAge {
-		utils.Logger("debug", "session for user < " + session.Values["sc_username"].(string) +" > has been expired")
+		utils.Logger("debug", "session for user < "+session.Values["sc_username"].(string)+" > has been expired")
 		return false, nil
-	} 
+	}
 	return session.Values["sc_authenticated"], user.GetUser(session.Values["sc_username"].(string))
 }
 
