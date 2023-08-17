@@ -11,7 +11,6 @@ import (
 	"secretary/alpha/utils"
 )
 
-// FIXME change the secret
 var store = sessions.NewCookieStore([]byte(constants.HTTP_SC_SECRET))
 
 func setHeaders(w http.ResponseWriter) {
