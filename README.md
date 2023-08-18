@@ -8,3 +8,4 @@
 - Validations
 - checkout logrus for logging
 - RBAC !!
+- Vault and non-vault database resource creation (for now within api)
