@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"secretary/alpha/internal"
+	"secretary/alpha/internal/resource"
 	"secretary/alpha/utils"
 )
 
