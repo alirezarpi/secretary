@@ -1,11 +1,9 @@
 package internal
 
 import (
-	"fmt"
-	"database/sql"
-
-	"secretary/alpha/utils"
 )
 
 
-
+func Audit(message string) {
+	// get date create file within date name start auditing 
+}

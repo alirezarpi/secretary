@@ -19,6 +19,10 @@ func adminFixture() error {
 	return nil
 }
 
+func auditEncryptionFixture() error {
+	return nil
+}
+
 //func permissionFixture() error {
 //	admin := &User{}
 //	username := "admin"
