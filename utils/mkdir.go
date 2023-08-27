@@ -1,8 +1,8 @@
 package utils
 
-import(
-    "os"
-    "path/filepath"
+import (
+	"os"
+	"path/filepath"
 )
 
 func MakeDir(dir string) {

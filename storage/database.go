@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 
 	"secretary/alpha/utils"
 )
