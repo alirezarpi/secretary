@@ -14,13 +14,13 @@ import (
 // -----------------------------------------
 
 const (
-	proxyHost     = "0.0.0.0"
-	proxyPort     = "4321"
-	dbHost        = "your_database_host"
-	dbPort        = 5432
-	dbUser        = "your_database_user"
-	dbPassword    = "your_database_password"
-	dbName        = "your_database_name"
+	proxyHost  = "0.0.0.0"
+	proxyPort  = "4321"
+	dbHost     = "your_database_host"
+	dbPort     = 5432
+	dbUser     = "your_database_user"
+	dbPassword = "your_database_password"
+	dbName     = "your_database_name"
 )
 
 func main() {
@@ -84,4 +84,3 @@ func handleConnection(client net.Conn) {
 	}
 	fmt.Printf("Connection from %s closed\n", client.RemoteAddr())
 }
-

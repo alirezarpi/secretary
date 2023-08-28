@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"secretary/alpha/internal/audit"
 	"secretary/alpha/utils"
 )
 
@@ -21,6 +22,7 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 		Responser(w, r, true, 200, map[string]interface{}{
 			"message": "you're logged-out",
 		})
+		audit.Audit("[user] [action:logout] user " + session.Values["sc_username"].(string) + " logged out.")
 		return
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{
