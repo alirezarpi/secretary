@@ -2,9 +2,9 @@ package audit
 
 import (
 	"fmt"
-	"time"
-	"os"
 	"io"
+	"os"
+	"time"
 
 	"secretary/alpha/utils"
 )
@@ -28,8 +28,8 @@ func Audit(message string) error {
 		return err
 	}
 	defer file.(*os.File).Close()
-	
-	_, err = file.Write([]byte(utils.CurrentTime()+" - "+message + "\n"))
+
+	_, err = file.Write([]byte(utils.CurrentTime() + " - " + message + "\n"))
 	if err != nil {
 		utils.Logger("fatal", err.Error())
 		return err

@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	"secretary/alpha/utils"
 	"secretary/alpha/internal/audit"
+	"secretary/alpha/utils"
 )
 
 func LogoutAPI(w http.ResponseWriter, r *http.Request) {
