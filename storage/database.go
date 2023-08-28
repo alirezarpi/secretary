@@ -9,7 +9,7 @@ import (
 
 func OpenDatabase() *sql.DB {
 	utils.MakeDir("persistence")
-	db, err := sql.Open("sqlite3", "./storage/secretary.db")
+	db, err := sql.Open("sqlite3", "./persistence/secretary.db")
 	if err != nil {
 		utils.Logger("fatal", err.Error())
 		return nil
