@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"secretary/alpha/internal"
+	"secretary/alpha/internal/audit"
 	"secretary/alpha/internal/constants"
 	"secretary/alpha/utils"
 )
@@ -41,6 +42,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		Responser(w, r, true, 200, map[string]interface{}{
 			"message": "login successfully",
 		})
+		audit.Audit("[user] [action:login] user " + retrievedUser.Username + " logged in.")
 		return
 	} else {
 		Responser(w, r, false, 401, map[string]interface{}{

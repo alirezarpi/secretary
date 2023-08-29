@@ -5,17 +5,11 @@ import (
 	"fmt"
 
 	"secretary/alpha/utils"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
-// FIXME add table names
-//const {
-//
-//}
-
 func OpenDatabase() *sql.DB {
-	db, err := sql.Open("sqlite3", "./storage/secretary.db")
+	utils.MakeDir("persistence")
+	db, err := sql.Open("sqlite3", "./persistence/secretary.db")
 	if err != nil {
 		utils.Logger("fatal", err.Error())
 		return nil
