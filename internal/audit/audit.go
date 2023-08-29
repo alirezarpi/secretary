@@ -9,6 +9,12 @@ import (
 	"secretary/alpha/utils"
 )
 
+type AuditEntry struct {
+	Timestamp string `json:"timestamp"`
+	User      string `json:"user"`
+	Action    string `json:"action"`
+}
+
 func createAuditFile() (io.Writer, error) {
 	directory := "persistence/audit/"
 	utils.MakeDir(directory)
