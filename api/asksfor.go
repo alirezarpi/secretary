@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"secretary/alpha/internal"
+	"secretary/alpha/internal/audit"
 	"secretary/alpha/utils"
 )
 
@@ -35,6 +36,7 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			audit.Audit("[asksfor] [action:create] user " + user.Username + " logged in.")
 			Responser(w, r, true, 201, map[string]interface{}{
 				"ask_data": "asksfor created successfully",
 			})
