@@ -9,6 +9,12 @@ import (
 	"secretary/alpha/utils"
 )
 
+type AuditEntry struct {
+	Timestamp string `json:"timestamp"`
+	User      string `json:"user"`
+	Action    string `json:"action"`
+}
+
 func createAuditFile() (io.Writer, error) {
 	directory := "persistence/audit/"
 	utils.MakeDir(directory)
@@ -29,7 +35,7 @@ func Audit(message string) error {
 	}
 	defer file.(*os.File).Close()
 
-	_, err = file.Write([]byte(utils.CurrentTime() + " - " + message + "\n"))
+	_, err = file.Write([]byte("[" + utils.CurrentTime() + " - " + utils.UUID() + "]" + " | " + message + "\n"))
 	if err != nil {
 		utils.Logger("fatal", err.Error())
 		return err
