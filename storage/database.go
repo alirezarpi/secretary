@@ -58,11 +58,17 @@ func DatabaseInit() bool {
 	}
 
 	// Resource Tables
-	table = "resource"
+	table = "resource_database"
 	query = fmt.Sprintf(`
 		CREATE TABLE IF NOT EXISTS %s (
 			uuid TEXT NOT NULL PRIMARY KEY,
 			name TEXT NOT NULL,
+			resource_type TEXT NOT NULL,
+			db_names TEXT NOT NULL,
+			db_host TEXT NOT NULL,
+			db_port	TEXT NOT NULL,
+			db_username TEXT NOT NULL,
+			db_password_hash TEXT NOT NULL,
 			active BOOLEAN DEFAULT TRUE,
 			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
