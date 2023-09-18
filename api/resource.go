@@ -1,12 +1,13 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"secretary/alpha/internal/resource"
 	"secretary/alpha/utils"
 )
-
+// curl -v -X POST -b $TOKEN  -H "Content-Type: application/json" -d '{"name": "test_db", "active": true, "dbType": "postgresql", "dbNames":"[*]", "dbPort": 5432, "dbHost": "localhost", "dbUser":"postgres", "dbPassword": "postgres"}' http://0.0.0.0:6080/db/resource | jq
 func DatabaseResourceAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
 		resource := &internal.DatabaseResource{}
@@ -19,6 +20,8 @@ func DatabaseResourceAPI(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			fmt.Println(reqBody["name"].(string))
+			fmt.Println(reqBody["dbNames"].(string))
 			err = resource.CreateDatabaseResource(
 				reqBody["name"].(string),
 				reqBody["active"].(bool),
@@ -29,6 +32,7 @@ func DatabaseResourceAPI(w http.ResponseWriter, r *http.Request) {
 				reqBody["dbUser"].(string),
 				reqBody["dbPassword"].(string),
 			)
+			println("im here")
 			if err != nil {
 				utils.Logger("err", err.Error())
 				Responser(w, r, false, 400, map[string]interface{}{

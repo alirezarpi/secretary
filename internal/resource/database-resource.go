@@ -49,6 +49,7 @@ func (r *DatabaseResource) CreateDatabaseResource(
 	dbHost string,
 	dbUser string,
 	dbPassword string) error {
+
 	existingResource := r.GetDatabaseResource(name)
 	if existingResource != nil {
 		return fmt.Errorf("resource already exists")
@@ -71,6 +72,7 @@ func (r *DatabaseResource) CreateDatabaseResource(
 	r.CreatedTime = createdTime
 	r.ModifiedTime = createdTime
 
+	print("fdsfsdfsdfs")
 	query := `
 		INSERT INTO resource_ (uuid, name, active, created_time, modified_time)
 		VALUES (?, ?, ?, ?, ?)
