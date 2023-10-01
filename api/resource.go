@@ -7,6 +7,7 @@ import (
 	"secretary/alpha/internal/resource"
 	"secretary/alpha/utils"
 )
+
 // curl -v -X POST -b $TOKEN  -H "Content-Type: application/json" -d '{"name": "test_db", "active": true, "dbType": "postgresql", "dbNames":"[*]", "dbPort": 5432, "dbHost": "localhost", "dbUser":"postgres", "dbPassword": "postgres"}' http://0.0.0.0:6080/db/resource | jq
 func DatabaseResourceAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {

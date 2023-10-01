@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
@@ -18,7 +17,6 @@ func HandleReqJson(r *http.Request) (map[string]interface{}, error) {
 	data := make(map[string]interface{})
 	err = json.Unmarshal(body, &data)
 
-	fmt.Println(data)
 	if err != nil {
 		return nil, err
 	}
