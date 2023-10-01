@@ -47,7 +47,7 @@ func (r *DatabaseResource) CreateDatabaseResource(name string, active bool) erro
 	r.ModifiedTime = createdTime
 
 	query := `
-	r.DBPasswordHash s		INSERT INTO resource_ (uuid, name, active, created_time, modified_time)
+		INSERT INTO resource_ (uuid, name, active, created_time, modified_time)
 		VALUES (?, ?, ?, ?, ?)
 	`
 	_, err := storage.DatabaseExec(query, r.UUID, r.Name, r.Active, r.CreatedTime, r.ModifiedTime)
