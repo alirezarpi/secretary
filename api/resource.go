@@ -1,15 +1,16 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"secretary/alpha/internal/resource"
 	"secretary/alpha/utils"
 )
-
-func ResourceAPI(w http.ResponseWriter, r *http.Request) {
+// curl -v -X POST -b $TOKEN  -H "Content-Type: application/json" -d '{"name": "test_db", "active": true, "dbType": "postgresql", "dbNames":"[*]", "dbPort": 5432, "dbHost": "localhost", "dbUser":"postgres", "dbPassword": "postgres"}' http://0.0.0.0:6080/db/resource | jq
+func DatabaseResourceAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
-		resource := &internal.Resource{}
+		resource := &internal.DatabaseResource{}
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
@@ -19,7 +20,19 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-			err = resource.CreateResource(reqBody["name"].(string), reqBody["active"].(bool))
+			fmt.Println(reqBody["name"].(string))
+			fmt.Println(reqBody["dbNames"].(string))
+			err = resource.CreateDatabaseResource(
+				reqBody["name"].(string),
+				reqBody["active"].(bool),
+				reqBody["dbType"].(string),
+				reqBody["dbNames"].([]string),
+				reqBody["dbPort"].(int),
+				reqBody["dbHost"].(string),
+				reqBody["dbUser"].(string),
+				reqBody["dbPassword"].(string),
+			)
+			println("im here")
 			if err != nil {
 				utils.Logger("err", err.Error())
 				Responser(w, r, false, 400, map[string]interface{}{
@@ -35,12 +48,12 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 			queryParam := r.URL.Query().Get("name")
 			if queryParam == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": resource.GetAllResources(),
+					"resource_data": resource.GetAllDatabaseResources(),
 				})
 				return
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": resource.GetResource(queryParam),
+					"resource_data": resource.GetDatabaseResource(queryParam),
 				})
 				return
 			}

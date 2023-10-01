@@ -27,7 +27,7 @@ func main() {
 
 	handler.HandleFunc("/asksfor", api.AskAPI)
 
-	handler.HandleFunc("/resource", api.ResourceAPI)
+	handler.HandleFunc("/db/resource", api.DatabaseResourceAPI)
 
 	handler.HandleFunc("/user", api.UserAPI)
 	handler.HandleFunc("/user/self", api.SelfAPI)

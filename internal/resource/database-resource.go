@@ -4,15 +4,17 @@ import (
 	"fmt"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"secretary/alpha/storage"
 	"secretary/alpha/utils"
 )
 
 type DatabaseResource struct {
-	UUID         string
-	Name         string
-	ResourceType string
+	UUID string
+	Name string
 
+	DBType         string
 	DBNames        []string
 	DBPort         int
 	DBHost         string
@@ -24,7 +26,30 @@ type DatabaseResource struct {
 	ModifiedTime string
 }
 
-func (r *DatabaseResource) CreateDatabaseResource(name string, active bool) error {
+func (r *DatabaseResource) SetPassword(password string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	r.DBPasswordHash = string(hash)
+	return nil
+}
+
+func (r *DatabaseResource) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(r.DBPasswordHash), []byte(password))
+	return err == nil
+}
+
+func (r *DatabaseResource) CreateDatabaseResource(
+	name string,
+	active bool,
+	dbType string,
+	dbNames []string,
+	dbPort int,
+	dbHost string,
+	dbUser string,
+	dbPassword string) error {
+
 	existingResource := r.GetDatabaseResource(name)
 	if existingResource != nil {
 		return fmt.Errorf("resource already exists")
@@ -37,15 +62,17 @@ func (r *DatabaseResource) CreateDatabaseResource(name string, active bool) erro
 
 	r.UUID = utils.UUID()
 	r.Name = name
-	r.ResourceType = ""
-	r.DBNames
-	r.DBPort
-	r.DBHost
-	r.DBUser
+	r.DBType = dbType
+	r.DBNames = dbNames
+	r.DBPort = dbPort
+	r.DBHost = dbHost
+	r.DBUser = dbUser
+	r.SetPassword(dbPassword)
 	r.Active = active
 	r.CreatedTime = createdTime
 	r.ModifiedTime = createdTime
 
+	print("fdsfsdfsdfs")
 	query := `
 		INSERT INTO resource_ (uuid, name, active, created_time, modified_time)
 		VALUES (?, ?, ?, ?, ?)
