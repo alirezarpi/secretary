@@ -15,14 +15,21 @@ func DatabaseResourceAPI(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
+			fmt.Println(reqBody["name"].(string),
+				reqBody["active"].(bool),
+				reqBody["dbType"].(string),
+				reqBody["dbNames"].([]string),
+				reqBody["dbPort"].(int),
+				reqBody["dbHost"].(string),
+				reqBody["dbUser"].(string),
+				reqBody["dbPassword"].(string))
+
 			if err != nil {
 				Responser(w, r, false, 400, map[string]interface{}{
 					"error": "invalid data",
 				})
 				return
 			}
-			fmt.Println(reqBody["name"].(string))
-			fmt.Println(reqBody["dbNames"].(string))
 			err = resource.CreateDatabaseResource(
 				reqBody["name"].(string),
 				reqBody["active"].(bool),
@@ -33,7 +40,6 @@ func DatabaseResourceAPI(w http.ResponseWriter, r *http.Request) {
 				reqBody["dbUser"].(string),
 				reqBody["dbPassword"].(string),
 			)
-			println("im here")
 			if err != nil {
 				utils.Logger("err", err.Error())
 				Responser(w, r, false, 400, map[string]interface{}{
