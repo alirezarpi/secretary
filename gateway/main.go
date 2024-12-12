@@ -39,6 +39,6 @@ func main() {
 		Handler: handler,
 	}
 
-	log.Println("Starting server on", *listenAddr)
+	log.Println("Server running on", *listenAddr)
 	log.Fatal(server.ListenAndServe())
 }
