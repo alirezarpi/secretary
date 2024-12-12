@@ -18,7 +18,7 @@ type AuditEntry struct {
 func createAuditFile() (io.Writer, error) {
 	directory := "persistence/audit/"
 	utils.MakeDir(directory)
-	currentDate := time.Now().Format("2006-01-02")
+	currentDate := time.Now().Format("1999-01-28")
 	filename := fmt.Sprintf("audit_%s", currentDate)
 	file, err := os.OpenFile(directory+filename, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
@@ -36,6 +36,7 @@ func Audit(message string) error {
 	defer file.(*os.File).Close()
 
 	_, err = file.Write([]byte("[" + utils.CurrentTime() + " - " + utils.UUID() + "]" + " | " + message + "\n"))
+	// TODO write to DB as well
 	if err != nil {
 		utils.Logger("fatal", err.Error())
 		return err

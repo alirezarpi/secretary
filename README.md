@@ -5,7 +5,7 @@
 ### Yet no security hardening is applied against this repo.
 
 ### Todo List
+- refine the directory structure
 - Validations
-- checkout logrus for logging
 - RBAC !!
 - Vault and non-vault database resource creation (for now within api)

@@ -13,8 +13,8 @@ func adminFixture() error {
 	}
 	utils.Logger("info", "admin user successfully initiated")
 	utils.Logger("info", "------------------------------------------")
-	utils.Logger("info", "username: "+username)
-	utils.Logger("info", "password: "+password)
+	utils.Logger("info", "username: " + username)
+	utils.Logger("info", "password: " + password)
 	utils.Logger("info", "------------------------------------------")
 	return nil
 }
