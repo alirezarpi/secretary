@@ -8,8 +8,10 @@ import (
 	"secretary/alpha/utils"
 )
 
+var MiddlewareWrapper = Middleware
+
 func AskAPI(w http.ResponseWriter, r *http.Request) {
-	if Middleware(w, r) {
+	if MiddlewareWrapper(w, r) {
 		asksFor := &internal.AsksFor{}
 		switch r.Method {
 		case "POST":

@@ -20,7 +20,11 @@ type AsksFor struct {
 	ModifiedTime string
 }
 
-func (af *AsksFor) CreateAsksFor(what string, reason string, requester string, reviewer string) error {
+
+func (af *AsksFor) CreateAsksFor(what, reason, requester, reviewer string) error {
+	if what == "" || reason == "" || requester == "" || reviewer == "" {
+		return fmt.Errorf("invalid input")
+	}
 	af.UUID = utils.UUID()
 	af.CreatedTime = utils.CurrentTime()
 	af.Status = constants.ASK_PENDING
@@ -29,11 +33,11 @@ func (af *AsksFor) CreateAsksFor(what string, reason string, requester string, r
 	af.Requester = requester
 
 	//FIXME validate data
+	utils.Logger("debug", fmt.Sprintf("CreateAsksFor: what=%s, reason=%s, requester=%s, reviewer=%s", what, reason, requester, reviewer))
 	query := `INSERT INTO asks_for (uuid, what, created_time, modified_time, reason, status, requester, reviewer)
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 	_, err := storage.DatabaseExec(query, af.UUID, af.What, af.CreatedTime, af.CreatedTime, af.Reason, af.Status, af.Requester, af.Reviewer)
 	if err != nil {
-		utils.Logger("err", err.Error())
 		return err
 	}
 	return nil

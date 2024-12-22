@@ -23,16 +23,16 @@ func main() {
 
 	handler.HandleFunc("/", api.HomeAPI)
 
-	handler.HandleFunc("/hz", api.HealthCheckAPI)
+	handler.HandleFunc("/api/hz", api.HealthCheckAPI)
 
-	handler.HandleFunc("/asksfor", api.AskAPI)
+	handler.HandleFunc("/api/asksfor", api.AskAPI)
 
-	handler.HandleFunc("/resource", api.ResourceAPI)
+	handler.HandleFunc("/api/resource", api.ResourceAPI)
 
-	handler.HandleFunc("/user", api.UserAPI)
-	handler.HandleFunc("/user/self", api.SelfAPI)
-	handler.HandleFunc("/user/login", api.LoginAPI)
-	handler.HandleFunc("/user/logout", api.LogoutAPI)
+	handler.HandleFunc("/api/user", api.UserAPI)
+	handler.HandleFunc("/api/user/self", api.SelfAPI)
+	handler.HandleFunc("/api/user/login", api.LoginAPI)
+	handler.HandleFunc("/api/user/logout", api.LogoutAPI)
 
 	var server = &http.Server{
 		Addr:    *listenAddr,
