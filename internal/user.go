@@ -96,6 +96,7 @@ func (u *User) GetUser(username string) *User {
 	return &User{
 		UUID:         results[0]["uuid"].(string),
 		Username:     results[0]["username"].(string),
+		PasswordHash: results[0]["password_hash"].(string),
 		Active:       results[0]["active"].(bool),
 		CreatedTime:  results[0]["created_time"].(time.Time).Format(time.RFC3339),
 		ModifiedTime: results[0]["modified_time"].(time.Time).Format(time.RFC3339),

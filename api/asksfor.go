@@ -24,21 +24,24 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 
 			user := &internal.User{}
 			_, user = isAuthenticated(r)
-			err = asksFor.CreateAsksFor(
+			err, af_uuid := asksFor.CreateAsksFor(
 				reqBody["what"].(string),
 				reqBody["reason"].(string),
 				user.Username,
 				reqBody["reviewer"].(string),
 			)
 			if err != nil {
+				utils.Logger("err", err.Error())
 				Responser(w, r, false, 500, map[string]interface{}{
 					"error": "internal error",
 				})
 				return
 			}
-			audit.Audit("[asksfor] [action:create] user " + user.Username + " logged in.")
+			audit.Audit("[asksfor] [action:create] COMPLETEL ME")
 			Responser(w, r, true, 201, map[string]interface{}{
-				"ask_data": "asksfor created successfully",
+				"asksfor_data": map[string]interface{}{
+					"uuid": af_uuid,
+				},
 			})
 			return
 		case "PATCH":
@@ -47,12 +50,12 @@ func AskAPI(w http.ResponseWriter, r *http.Request) {
 			queryParam := r.URL.Query().Get("uuid")
 			if queryParam == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"ask_data": asksFor.GetAllAsksFors(),
+					"asksfor_data": asksFor.GetAllAsksFors(),
 				})
 				return
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"ask_data": asksFor.GetAsksFor(queryParam),
+					"asksfor_data": asksFor.GetAsksFor(queryParam),
 				})
 				return
 			}

@@ -20,27 +20,27 @@ type AsksFor struct {
 	ModifiedTime string
 }
 
-
-func (af *AsksFor) CreateAsksFor(what, reason, requester, reviewer string) error {
+func (af *AsksFor) CreateAsksFor(what, reason, requester, reviewer string) (error, string) {
 	if what == "" || reason == "" || requester == "" || reviewer == "" {
-		return fmt.Errorf("invalid input")
+		return fmt.Errorf("invalid input"), ""
 	}
 	af.UUID = utils.UUID()
 	af.CreatedTime = utils.CurrentTime()
 	af.Status = constants.ASK_PENDING
+	af.What = what
 	af.Reason = reason
 	af.Reviewer = reviewer
 	af.Requester = requester
 
 	//FIXME validate data
 	utils.Logger("debug", fmt.Sprintf("CreateAsksFor: what=%s, reason=%s, requester=%s, reviewer=%s", what, reason, requester, reviewer))
-	query := `INSERT INTO asks_for (uuid, what, created_time, modified_time, reason, status, requester, reviewer)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO asksfor (uuid, what, created_time, modified_time, reason, status, requester, reviewer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 	_, err := storage.DatabaseExec(query, af.UUID, af.What, af.CreatedTime, af.CreatedTime, af.Reason, af.Status, af.Requester, af.Reviewer)
 	if err != nil {
-		return err
+		utils.Logger("err", err.Error())
+		return err, ""
 	}
-	return nil
+	return nil, af.UUID
 }
 
 func (af *AsksFor) GetAsksFor(uuid string) *AsksFor {

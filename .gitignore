@@ -16,5 +16,5 @@ go.work
 **/tmp/**
 
 sec
-**persistence**
-**/persistence/**
+**data**
+**/data/**

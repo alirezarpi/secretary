@@ -16,7 +16,7 @@ type AuditEntry struct {
 }
 
 func createAuditFile() (io.Writer, error) {
-	directory := "persistence/audit/"
+	directory := "data/audit/"
 	utils.MakeDir(directory)
 	currentDate := time.Now().Format("1999-01-28")
 	filename := fmt.Sprintf("audit_%s", currentDate)
