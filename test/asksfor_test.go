@@ -11,9 +11,8 @@ import (
 )
 
 func mockMiddleware(w http.ResponseWriter, r *http.Request, secure ...bool) bool {
-	// Mock Middleware that simulates authentication
 	w.Header().Set("Content-Type", "application/json")
-	return true // Always allow for testing
+	return true
 }
 
 func TestAskAPI(t *testing.T) {
@@ -80,15 +79,12 @@ func TestAskAPI(t *testing.T) {
 
 			recorder := httptest.NewRecorder()
 
-			// Simulate the API call using the mock middleware
 			api.AskAPI(recorder, req)
 
-			// Check for expected status code
 			if recorder.Code != tt.expectedStatus {
 				t.Errorf("expected status %d, got %d", tt.expectedStatus, recorder.Code)
 			}
 
-			// Unmarshal and check response body
 			var respBody map[string]interface{}
 			json.Unmarshal(recorder.Body.Bytes(), &respBody)
 			for key, expectedValue := range tt.expectedBody {

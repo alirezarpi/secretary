@@ -4,6 +4,7 @@
 FROM golang:alpine AS build
 
 ENV CGO_ENABLED=1
+ENV CGO_CFLAGS="-D_LARGEFILE64_SOURCE"
 
 WORKDIR /workspace
 
@@ -21,8 +22,8 @@ RUN go mod tidy && \
 # -----------------------------------------------------------------------------
 FROM scratch
 
-COPY --from=build /workspace/secretary /secretary/
+WORKDIR /secretary/
 
-VOLUME /secretary/
+COPY --from=build /workspace/secretary /secretary/
 
 ENTRYPOINT [ "/secretary/secretary" ]
