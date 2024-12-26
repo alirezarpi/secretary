@@ -44,7 +44,7 @@ func (af *AsksFor) CreateAsksFor(what, reason, requester, reviewer string) (erro
 }
 
 func (af *AsksFor) GetAsksFor(uuid string) *AsksFor {
-	query := fmt.Sprintf(`SELECT * FROM asks_for WHERE uuid='%s'`, uuid)
+	query := fmt.Sprintf(`SELECT * FROM asksfor WHERE uuid='%s'`, uuid)
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
 		utils.Logger("err", err.Error())
