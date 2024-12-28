@@ -7,9 +7,9 @@ import (
 	"secretary/alpha/utils"
 )
 
-func ResourceAPI(w http.ResponseWriter, r *http.Request) {
+func ResourceUserAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
-		resource := &internal.Resource{}
+		resource_user := &internal.ResourceUser{}
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
@@ -19,7 +19,11 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-			err, resource_uuid := resource.CreateResource(reqBody["name"].(string), reqBody["active"].(bool))
+			err, ru_uuid := resource_user.CreateResourceUser(
+				reqBody["user_id"].(string), 
+				reqBody["resource_id"].(string),
+				reqBody["active"].(bool),
+			)
 			if err != nil {
 				utils.Logger("err", err.Error())
 				Responser(w, r, false, 400, map[string]interface{}{
@@ -28,22 +32,26 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			Responser(w, r, true, 201, map[string]interface{}{
-				"resource_data": "resource " + resource_uuid + " created successfully",
+				"resource_user_data": "resource_user " + ru_uuid + " created successfully",
 			})
 			return
 		case "GET":
-			queryParam := r.URL.Query().Get("name")
-			if queryParam == "" {
+			queryUserID := r.URL.Query().Get("user_id")
+			queryResourceID := r.URL.Query().Get("resource_id")
+
+			if queryUserID == "" && queryResourceID == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": resource.GetAllResources(),
-				})
-				return
-			} else {
-				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": resource.GetResource(queryParam),
+					"resource_user_data": resource_user.GetAllResourceUsers(),
 				})
 				return
 			}
+			if queryUserID != "" && queryResourceID != "" {
+				Responser(w, r, true, 200, map[string]interface{}{
+					"resource_user_data": resource_user.GetResourceUser(queryUserID, queryResourceID),
+				})
+				return
+			}
+
 		default:
 			Responser(w, r, false, 405, map[string]interface{}{
 				"error": "method not allowed",

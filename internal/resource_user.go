@@ -8,18 +8,19 @@ import (
 	"secretary/alpha/utils"
 )
 
-type Resource struct {
+type ResourceUser struct {
 	UUID         string
-	Name         string
+	UserID       string
+	ResourceID   string
 	Active       bool
 	CreatedTime  string
 	ModifiedTime string
 }
 
-func (r *Resource) CreateResource(name string, active bool) (error, string) {
-	existingResource := r.GetResource(name)
+func (ru *ResourceUser) CreateResourceUser(user_id string, resource_id string, active bool) (error, string) {
+	existingResource := ru.GetResourceUser(user_id, resource_id)
 	if existingResource != nil {
-		return fmt.Errorf("resource already exists"), ""
+		return fmt.Errorf("resource_user already exists"), ""
 	}
 
 	// FIXME Add validation code here ...
@@ -27,26 +28,27 @@ func (r *Resource) CreateResource(name string, active bool) (error, string) {
 
 	createdTime := utils.CurrentTime()
 
-	r.UUID = utils.UUID()
-	r.Name = name
-	r.Active = active
-	r.CreatedTime = createdTime
-	r.ModifiedTime = createdTime
+	ru.UUID = utils.UUID()
+	ru.UserID = user_id
+	ru.ResourceID = resource_id
+	ru.Active = active
+	ru.CreatedTime = createdTime
+	ru.ModifiedTime = createdTime
 
 	query := `
-		INSERT INTO resource (uuid, name, active, created_time, modified_time)
-		VALUES (?, ?, ?, ?, ?)
+		INSERT INTO resource_user (uuid, user_id, resource_id, active, created_time, modified_time)
+		VALUES (?, ?, ?, ?, ?, ?)
 	`
-	_, err := storage.DatabaseExec(query, r.UUID, r.Name, r.Active, r.CreatedTime, r.ModifiedTime)
+	_, err := storage.DatabaseExec(query, ru.UUID, ru.UserID, ru.ResourceID, ru.Active, ru.CreatedTime, ru.ModifiedTime)
 	if err != nil {
-		return fmt.Errorf("error in createresource: %v", err), ""
+		return fmt.Errorf("error in createresourceuser: %v", err), ""
 	}
 
-	return nil, r.UUID
+	return nil, ru.UUID
 }
 
-func (r *Resource) GetResource(name string) *Resource {
-	query := fmt.Sprintf(`SELECT * FROM resource WHERE name='%s'`, name)
+func (ru *ResourceUser) GetResourceUser(user_id string, resource_id string) *ResourceUser {
+	query := fmt.Sprintf(`SELECT * FROM resource_user WHERE user_id='%s' AND resource_id='%s'`, user_id, resource_id)
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
@@ -71,17 +73,19 @@ func (r *Resource) GetResource(name string) *Resource {
 		return nil
 	}
 
-	return &Resource{
+	return &ResourceUser{
 		UUID:         results[0]["uuid"].(string),
-		Name:         results[0]["name"].(string),
+		UserID:       results[0]["user_id"].(string),
+		ResourceID:   results[0]["resource_id"].(string),
 		Active:       results[0]["active"].(bool),
 		CreatedTime:  results[0]["created_time"].(time.Time).Format(time.RFC3339),
 		ModifiedTime: results[0]["modified_time"].(time.Time).Format(time.RFC3339),
 	}
 }
 
-func (r *Resource) GetAllResources() []*Resource {
-	query := `SELECT * FROM resource`
+func (ru *ResourceUser) GetAllResourceUsers() []*ResourceUser {
+	// TODO Add pagination
+	query := `SELECT * FROM resource_user`
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
@@ -102,17 +106,18 @@ func (r *Resource) GetAllResources() []*Resource {
 		return nil
 	}
 
-	resources := make([]*Resource, 0, len(results))
+	resource_users := make([]*ResourceUser, 0, len(results))
 	for _, res := range results {
-		resource := &Resource{
+		resource_user := &ResourceUser{
 			UUID:         res["uuid"].(string),
-			Name:         res["name"].(string),
+			UserID:       res["user_id"].(string),
+			ResourceID:   res["resource_id"].(string),
 			Active:       res["active"].(bool),
 			CreatedTime:  res["created_time"].(time.Time).Format(time.RFC3339),
 			ModifiedTime: res["modified_time"].(time.Time).Format(time.RFC3339),
 		}
-		resources = append(resources, resource)
+		resource_users = append(resource_users, resource_user)
 	}
 
-	return resources
+	return resource_users
 }

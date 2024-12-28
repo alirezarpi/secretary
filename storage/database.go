@@ -74,6 +74,44 @@ func DatabaseInit() bool {
 		return false
 	}
 
+	// Resource User Table
+	table = "resource_user"
+	query = fmt.Sprintf(`
+		CREATE TABLE IF NOT EXISTS %s (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			user_id TEXT NOT NULL,
+			resource_id TEXT NOT NULL,
+			active BOOLEAN DEFAULT TRUE,
+			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE (uuid, user_id)
+		);`, table)
+	_, err = db.Exec(query)
+	if err != nil {
+		utils.Logger("fatal", err.Error())
+		return false
+	}
+
+	// Database Resource Tables
+	table = "resource_database"
+	query = fmt.Sprintf(`
+		CREATE TABLE IF NOT EXISTS %s (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			name TEXT NOT NULL,
+			resource_user_id TEXT NOT NULL,
+			db_host TEXT NOT NULL,
+			db_port TEXT NOT NULL,
+			active BOOLEAN DEFAULT TRUE,
+			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE (uuid, resource_user_id)
+		);`, table)
+	_, err = db.Exec(query)
+	if err != nil {
+		utils.Logger("fatal", err.Error())
+		return false
+	}
+
 	// RBAC Tables
 	table = "rbac_role"
 	query = fmt.Sprintf(`
