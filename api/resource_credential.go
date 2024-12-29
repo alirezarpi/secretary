@@ -7,9 +7,9 @@ import (
 	"secretary/alpha/utils"
 )
 
-func ResourceUserAPI(w http.ResponseWriter, r *http.Request) {
+func ResourceCredentialAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
-		resource_user := &internal.ResourceUser{}
+		resource_credential := &internal.ResourceCredential{}
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
@@ -19,8 +19,8 @@ func ResourceUserAPI(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-			err, ru_uuid := resource_user.CreateResourceUser(
-				reqBody["user_id"].(string), 
+			err, ru_uuid := resource_credential.CreateResourceCredential(
+				reqBody["credential_id"].(string), 
 				reqBody["resource_id"].(string),
 				reqBody["active"].(bool),
 			)
@@ -32,22 +32,22 @@ func ResourceUserAPI(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			Responser(w, r, true, 201, map[string]interface{}{
-				"resource_user_data": "resource_user " + ru_uuid + " created successfully",
+				"resource_credential_data": "resource_credential " + ru_uuid + " created successfully",
 			})
 			return
 		case "GET":
-			queryUserID := r.URL.Query().Get("user_id")
+			queryCredID := r.URL.Query().Get("credential_id")
 			queryResourceID := r.URL.Query().Get("resource_id")
 
-			if queryUserID == "" && queryResourceID == "" {
+			if queryCredID == "" && queryResourceID == "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_user_data": resource_user.GetAllResourceUsers(),
+					"resource_credential_data": resource_credential.GetAllResourceCredentials(),
 				})
 				return
 			}
-			if queryUserID != "" && queryResourceID != "" {
+			if queryCredID != "" && queryResourceID != "" {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_user_data": resource_user.GetResourceUser(queryUserID, queryResourceID),
+					"resource_credential_data": resource_credential.GetResourceCredential(queryCredID, queryResourceID),
 				})
 				return
 			}

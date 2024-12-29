@@ -3,40 +3,41 @@ package internal
 import (
 	"fmt"
 	"time"
-
+	
 	"golang.org/x/crypto/bcrypt"
 
 	"secretary/alpha/storage"
 	"secretary/alpha/utils"
 )
 
-type User struct {
+type Credential struct {
 	UUID         string
-	Username     string
+	Username	 string
 	PasswordHash string
 	Active       bool
 	CreatedTime  string
 	ModifiedTime string
 }
 
-func (u *User) SetPassword(password string) error {
+func (c *Credential) SetPassword(password string) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	u.PasswordHash = string(hash)
+	c.PasswordHash = string(hash)
 	return nil
 }
 
-func (u *User) CheckPassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+func (c *Credential) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(c.PasswordHash), []byte(password))
 	return err == nil
 }
 
-func (u *User) CreateUser(username string, password string, active bool) error {
-	existingUser := u.GetUser(username)
-	if existingUser != nil {
-		return fmt.Errorf("username %v already exists", username)
+func (c *Credential) CreateCredential(username string, password string, active bool) (error, string) {
+	//FIXME if same password with same username was passed it will allow it as it's checking with hash
+	existingResource := c.GetCredential(username, password)
+	if existingResource != nil {
+		return fmt.Errorf("credential already exists"), ""
 	}
 
 	// FIXME Add validation code here ...
@@ -44,31 +45,31 @@ func (u *User) CreateUser(username string, password string, active bool) error {
 
 	createdTime := utils.CurrentTime()
 
-	u.UUID = utils.UUID()
-	u.Username = username
-	u.CreatedTime = createdTime
-	u.ModifiedTime = createdTime
-	u.Active = active
+	c.UUID = utils.UUID()
+	c.Username = username
+	c.Active = active
+	c.CreatedTime = createdTime
+	c.ModifiedTime = createdTime
 
-	err := u.SetPassword(password)
+	err := c.SetPassword(password)
 	if err != nil {
-		return fmt.Errorf("setpassword error: %v", err)
+		return fmt.Errorf("err in setpassword: %v", err), ""
 	}
 
 	query := `
-		INSERT INTO user_local (uuid, username, password, active, created_time, modified_time)
+		INSERT INTO credential (uuid, username, password, active, created_time, modified_time)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
-	_, err = storage.DatabaseExec(query, u.UUID, u.Username, u.PasswordHash, u.Active, u.CreatedTime, u.ModifiedTime)
+	_, err = storage.DatabaseExec(query, c.UUID, c.Username, c.PasswordHash, c.Active, c.CreatedTime, c.ModifiedTime)
 	if err != nil {
-		return fmt.Errorf("error in createuser: %v", err)
+		return fmt.Errorf("error in createresourceuser: %v", err), ""
 	}
 
-	return nil
+	return nil, c.UUID
 }
 
-func (u *User) GetUser(username string) *User {
-	query := fmt.Sprintf(`SELECT * FROM user_local WHERE username='%s'`, username)
+func (c *Credential) GetCredential(username string, password string) *Credential {
+	query := fmt.Sprintf(`SELECT * FROM credential WHERE username='%s' AND password='%s'`, username, password)
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
@@ -93,9 +94,9 @@ func (u *User) GetUser(username string) *User {
 		return nil
 	}
 
-	return &User{
+	return &Credential{
 		UUID:         results[0]["uuid"].(string),
-		Username:     results[0]["username"].(string),
+		Username:	  results[0]["username"].(string),
 		PasswordHash: results[0]["password"].(string),
 		Active:       results[0]["active"].(bool),
 		CreatedTime:  results[0]["created_time"].(time.Time).Format(time.RFC3339),
@@ -103,8 +104,9 @@ func (u *User) GetUser(username string) *User {
 	}
 }
 
-func (u *User) GetAllUsers() []*User {
-	query := `SELECT * FROM user_local`
+func (c *Credential) GetAllCredentials() []*Credential {
+	// TODO Add pagination
+	query := `SELECT * FROM credential`
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
@@ -125,18 +127,18 @@ func (u *User) GetAllUsers() []*User {
 		return nil
 	}
 
-	users := make([]*User, 0, len(results))
+	credentials := make([]*Credential, 0, len(results))
 	for _, res := range results {
-		user := &User{
+		credential := &Credential{
 			UUID:         res["uuid"].(string),
-			Username:     res["username"].(string),
+			Username:	  res["username"].(string),
 			PasswordHash: res["password"].(string),
 			Active:       res["active"].(bool),
 			CreatedTime:  res["created_time"].(time.Time).Format(time.RFC3339),
 			ModifiedTime: res["modified_time"].(time.Time).Format(time.RFC3339),
 		}
-		users = append(users, user)
+		credentials = append(credentials, credential)
 	}
 
-	return users
+	return credentials
 }

@@ -27,9 +27,10 @@ func main() {
 
 	handler.HandleFunc("/api/asksfor", api.AskAPI)
 
+	handler.HandleFunc("/api/credential", api.CredentialAPI)
+
 	handler.HandleFunc("/api/resource", api.ResourceAPI)
-	handler.HandleFunc("/api/resource/user", api.ResourceUserAPI)
-	handler.HandleFunc("/api/resource/database", api.ResourceDatabaseAPI)
+	handler.HandleFunc("/api/resource/credential", api.ResourceCredentialAPI)
 
 	handler.HandleFunc("/api/user", api.UserAPI)
 	handler.HandleFunc("/api/user/self", api.SelfAPI)

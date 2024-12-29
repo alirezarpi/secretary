@@ -11,12 +11,15 @@ import (
 type Resource struct {
 	UUID         string
 	Name         string
+	Host		 string
+	Port		 string
+	Kind		 string
 	Active       bool
 	CreatedTime  string
 	ModifiedTime string
 }
 
-func (r *Resource) CreateResource(name string, active bool) (error, string) {
+func (r *Resource) CreateResource(name string, host string, port string, kind string, active bool) (error, string) {
 	existingResource := r.GetResource(name)
 	if existingResource != nil {
 		return fmt.Errorf("resource already exists"), ""
@@ -29,15 +32,18 @@ func (r *Resource) CreateResource(name string, active bool) (error, string) {
 
 	r.UUID = utils.UUID()
 	r.Name = name
+	r.Host = host
+	r.Port = port
+	r.Kind = kind
 	r.Active = active
 	r.CreatedTime = createdTime
 	r.ModifiedTime = createdTime
 
 	query := `
-		INSERT INTO resource (uuid, name, active, created_time, modified_time)
-		VALUES (?, ?, ?, ?, ?)
+		INSERT INTO resource (uuid, name, host, port, kind, active, created_time, modified_time)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 	`
-	_, err := storage.DatabaseExec(query, r.UUID, r.Name, r.Active, r.CreatedTime, r.ModifiedTime)
+	_, err := storage.DatabaseExec(query, r.UUID, r.Name, r.Host, r.Port, r.Kind, r.Active, r.CreatedTime, r.ModifiedTime)
 	if err != nil {
 		return fmt.Errorf("error in createresource: %v", err), ""
 	}
@@ -74,6 +80,9 @@ func (r *Resource) GetResource(name string) *Resource {
 	return &Resource{
 		UUID:         results[0]["uuid"].(string),
 		Name:         results[0]["name"].(string),
+		Host:         results[0]["host"].(string),
+		Port:         results[0]["port"].(string),
+		Kind:         results[0]["kind"].(string),
 		Active:       results[0]["active"].(bool),
 		CreatedTime:  results[0]["created_time"].(time.Time).Format(time.RFC3339),
 		ModifiedTime: results[0]["modified_time"].(time.Time).Format(time.RFC3339),
@@ -107,6 +116,9 @@ func (r *Resource) GetAllResources() []*Resource {
 		resource := &Resource{
 			UUID:         res["uuid"].(string),
 			Name:         res["name"].(string),
+			Host:         res["host"].(string),
+			Port:         res["port"].(string),
+			Kind:         res["kind"].(string),
 			Active:       res["active"].(bool),
 			CreatedTime:  res["created_time"].(time.Time).Format(time.RFC3339),
 			ModifiedTime: res["modified_time"].(time.Time).Format(time.RFC3339),

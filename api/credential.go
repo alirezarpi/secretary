@@ -7,9 +7,9 @@ import (
 	"secretary/alpha/utils"
 )
 
-func ResourceAPI(w http.ResponseWriter, r *http.Request) {
+func CredentialAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
-		resource := &internal.Resource{}
+		credential := &internal.Credential{}
 		switch r.Method {
 		case "POST":
 			reqBody, err := utils.HandleReqJson(r)
@@ -19,11 +19,9 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-			err, resource_uuid := resource.CreateResource(
-				reqBody["name"].(string),
-				reqBody["host"].(string),
-				reqBody["port"].(string),
-				reqBody["kind"].(string),
+			err, credential_uuid := credential.CreateCredential(
+				reqBody["username"].(string),
+				reqBody["password"].(string),
 				reqBody["active"].(bool),
 			)
 			if err != nil {
@@ -34,19 +32,20 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			Responser(w, r, true, 201, map[string]interface{}{
-				"resource_data": "resource " + resource_uuid + " created successfully",
+				"credential_data": "credential " + credential_uuid + " created successfully",
 			})
 			return
 		case "GET":
-			queryParam := r.URL.Query().Get("name")
-			if queryParam == "" {
+			queryParamUsername := r.URL.Query().Get("username")
+			queryParamPassword := r.URL.Query().Get("password")
+			if (queryParamUsername == "") && (queryParamPassword == "") {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": resource.GetAllResources(),
+					"credential_data": credential.GetAllCredentials(),
 				})
 				return
 			} else {
 				Responser(w, r, true, 200, map[string]interface{}{
-					"resource_data": resource.GetResource(queryParam),
+					"credential_data": credential.GetCredential(queryParamUsername, queryParamPassword),
 				})
 				return
 			}
@@ -58,3 +57,4 @@ func ResourceAPI(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
