@@ -51,8 +51,8 @@ func (r *Resource) CreateResource(name string, host string, port string, kind st
 	return nil, r.UUID
 }
 
-func (r *Resource) GetResource(name string) *Resource {
-	query := fmt.Sprintf(`SELECT * FROM resource WHERE name='%s'`, name)
+func (r *Resource) GetResource(uuid string) *Resource {
+	query := fmt.Sprintf(`SELECT * FROM resource WHERE uuid='%s'`, name)
 
 	rows, err := storage.DatabaseQuery(query)
 	if err != nil {
