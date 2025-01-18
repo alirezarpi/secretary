@@ -7,7 +7,7 @@ import (
 	"secretary/alpha/utils"
 )
 
-func SessionAPI(w http.ResponseWriter, r *http.Request) {
+func SessionCreateAPI(w http.ResponseWriter, r *http.Request) {
 	if Middleware(w, r) {
 		session := &internal.Session{}
 		switch r.Method {
@@ -20,11 +20,7 @@ func SessionAPI(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			err, session_uuid := session.CreateSession(
-				reqBody["name"].(string),
-				reqBody["host"].(string),
-				reqBody["port"].(string),
-				reqBody["kind"].(string),
-				reqBody["active"].(bool),
+				reqBody["resource_id"].(string),
 			)
 			if err != nil {
 				utils.Logger("err", err.Error())
@@ -37,19 +33,6 @@ func SessionAPI(w http.ResponseWriter, r *http.Request) {
 				"session_data": "session " + session_uuid + " created successfully",
 			})
 			return
-		case "GET":
-			queryParam := r.URL.Query().Get("name")
-			if queryParam == "" {
-				Responser(w, r, true, 200, map[string]interface{}{
-					"session_data": session.GetAllSessions(),
-				})
-				return
-			} else {
-				Responser(w, r, true, 200, map[string]interface{}{
-					"session_data": session.GetSession(queryParam),
-				})
-				return
-			}
 		default:
 			Responser(w, r, false, 405, map[string]interface{}{
 				"error": "method not allowed",

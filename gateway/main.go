@@ -32,6 +32,8 @@ func main() {
 	handler.HandleFunc("/api/resource", api.ResourceAPI)
 	handler.HandleFunc("/api/resource/credential", api.ResourceCredentialAPI)
 
+	handler.HandleFunc("/api/session/create", api.SessionCreateAPI)
+
 	handler.HandleFunc("/api/user", api.UserAPI)
 	handler.HandleFunc("/api/user/self", api.SelfAPI)
 	handler.HandleFunc("/api/user/login", api.LoginAPI)
