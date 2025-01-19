@@ -8,6 +8,8 @@ import (
 	"secretary/alpha/api"
 	"secretary/alpha/internal"
 	"secretary/alpha/storage"
+	"secretary/alpha/utils"
+	"secretary/alpha/lib/session"
 )
 
 func main() {
@@ -32,8 +34,6 @@ func main() {
 	handler.HandleFunc("/api/resource", api.ResourceAPI)
 	handler.HandleFunc("/api/resource/credential", api.ResourceCredentialAPI)
 
-	handler.HandleFunc("/api/session/create", api.SessionCreateAPI)
-
 	handler.HandleFunc("/api/user", api.UserAPI)
 	handler.HandleFunc("/api/user/self", api.SelfAPI)
 	handler.HandleFunc("/api/user/login", api.LoginAPI)
@@ -44,6 +44,8 @@ func main() {
 		Handler: handler,
 	}
 
-	log.Println("Server running on", *listenAddr)
+	go session.ListenAndServeTCP()
+
+	utils.Logger("info", "HTTP server listening on " + string(*listenAddr))
 	log.Fatal(server.ListenAndServe())
 }

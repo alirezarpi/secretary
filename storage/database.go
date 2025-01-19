@@ -118,6 +118,27 @@ func DatabaseInit() bool {
 	}
 	utils.Logger("info", "table " + table + " created successfully")
 
+	// Resource Credential Table
+	table = "session"
+	query = fmt.Sprintf(`
+		CREATE TABLE IF NOT EXISTS %s (
+			uuid TEXT NOT NULL PRIMARY KEY,
+			user_id TEXT NOT NULL,
+			resource_credential_id TEXT NOT NULL,
+			proxy TEXT NOT NULL,
+			ttl TEXT NOT NULL,
+			active BOOLEAN DEFAULT TRUE,
+			created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			modified_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE (uuid)
+		);`, table)
+	_, err = db.Exec(query)
+	if err != nil {
+		utils.Logger("fatal", err.Error())
+		return false
+	}
+	utils.Logger("info", "table " + table + " created successfully")
+
 	// RBAC Tables
 	table = "rbac_role"
 	query = fmt.Sprintf(`
