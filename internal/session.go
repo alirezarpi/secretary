@@ -31,7 +31,7 @@ func random() int {
 }
 
 func HandleTCPConnection(c net.Conn) {
-    utils.Logger("info", "serving TCP " + c.RemoteAddr().String())
+	utils.Logger("info", "serving TCP " + c.RemoteAddr().String())
 	for {
 		netData, err := bufio.NewReader(c).ReadString('\n')
 		// TODO check user permissions

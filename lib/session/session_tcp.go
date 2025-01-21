@@ -17,19 +17,19 @@ func ListenAndServeTCP() {
     }
     utils.Logger("info", "TCP server listening on " + sessionTCPPort)
     l, err := net.Listen("tcp4", ":" + sessionTCPPort)
-	if err != nil {
-		utils.Logger("fatal", err.Error())
-		return
-	}
-	defer l.Close()
-	rand.Seed(time.Now().Unix())
+    if err != nil {
+	utils.Logger("fatal", err.Error())
+	return
+    }
+    defer l.Close()
+    rand.Seed(time.Now().Unix())
 
-	for {
-		c, err := l.Accept()
-		if err != nil {
-		    utils.Logger("error", err.Error())
-			return
-		}
-		go internal.HandleTCPConnection(c)
-	}
+    for {
+	c, err := l.Accept()
+	if err != nil {
+	    utils.Logger("error", err.Error())
+		return
+	    }
+	go internal.HandleTCPConnection(c)
+    }
 }
